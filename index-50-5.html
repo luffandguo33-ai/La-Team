@@ -1,0 +1,3111 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#5a8f7b">
+<title>La Team</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap">
+<style>
+:root {
+  --bg: #f4f6f5;
+  --card: #ffffff;
+  --ink: #2c3531;
+  --mute: #7a8782;
+  --line: #e4ebe7;
+  --acc: #5a8f7b;
+  --acc-soft: #e6f2ed;
+  --on: #fff;
+  --rare: #7b6bb0;
+  --epic: #c9a227;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #161c1a;
+    --card: #1e2623;
+    --ink: #d8e0dc;
+    --mute: #8a9691;
+    --line: #2a3330;
+    --acc: #6fad96;
+    --acc-soft: #24352e;
+    --on: #15201c;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: env(safe-area-inset-top, 0); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.45 "DM Sans", system-ui, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0);
+  background: var(--bg);
+  padding: 12px 18px 10px;
+  z-index: 10;
+  border-bottom: 1px solid var(--line);
+}
+.hd { display: flex; justify-content: space-between; align-items: center; }
+.hd b { font-weight: 600; font-size: 1.1rem; letter-spacing: -0.02em; }
+.hd .money { color: var(--mute); font-size: 0.9rem; font-weight: 500; }
+.progress-line {
+  height: 3px;
+  background: var(--line);
+  border-radius: 2px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+.progress-line i { display: block; height: 100%; width: 0; background: var(--acc); transition: width 0.2s; }
+.status { color: var(--mute); font-size: 0.8rem; margin-top: 6px; min-height: 1.2em; }
+main { max-width: 480px; margin: 0 auto; padding: 12px 16px 100px; }
+.toast {
+  display: none;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+}
+.toast button {
+  float: right;
+  background: none;
+  border: 0;
+  color: var(--mute);
+  font: inherit;
+  padding: 0 0 0 10px;
+}
+.toast.drop-toast { background: var(--acc-soft); border-color: var(--acc); }
+
+/* Popup des lettres */
+.letter-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0,0,0,0.48);
+}
+.letter-modal.show { display: flex; }
+.letter-box {
+  width: min(420px, 100%);
+  max-height: min(75vh, 560px);
+  overflow: auto;
+  background: var(--card);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 18px 50px rgba(0,0,0,0.28);
+  animation: letterPop 0.16s ease-out;
+}
+.letter-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.letter-title b { font-size: 1.05rem; }
+.letter-close {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--acc-soft);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.letter-message {
+  white-space: pre-wrap;
+  font-size: 1rem;
+  line-height: 1.65;
+  text-align: center;
+  padding: 18px 8px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.letter-ok {
+  display: block;
+  width: 100%;
+  margin-top: 16px;
+}
+@keyframes letterPop {
+  from { opacity: 0; transform: scale(0.94) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.pills {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px 0 14px;
+  scrollbar-width: none;
+}
+.pills::-webkit-scrollbar { display: none; }
+.pills button {
+  flex: none;
+  border: 0;
+  background: var(--card);
+  color: var(--mute);
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 8px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+}
+.pills button.on {
+  background: var(--acc);
+  color: var(--on);
+  border-color: var(--acc);
+}
+.lvl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8rem;
+  color: var(--mute);
+  margin-bottom: 4px;
+}
+.lvl-bar {
+  height: 4px;
+  background: var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 14px;
+}
+.lvl-bar i { display: block; height: 100%; background: var(--acc); }
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.row:last-child { border-bottom: 0; padding-bottom: 0; }
+.row:first-child { padding-top: 0; }
+.row .info { flex: 1; min-width: 0; }
+.row b { font-weight: 500; display: block; }
+.row small { color: var(--mute); font-size: 0.78rem; }
+.row.lock { opacity: 0.4; }
+.row.active b { color: var(--acc); }
+button.btn {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 18px;
+  border: 0;
+  background: var(--acc-soft);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+button.btn.primary { background: var(--acc); color: var(--on); }
+button.btn:disabled { opacity: 0.4; }
+button:focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+h3 {
+  font-weight: 500;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--mute);
+  margin: 20px 0 8px;
+}
+h3:first-child { margin-top: 4px; }
+.empty {
+  color: var(--mute);
+  text-align: center;
+  padding: 28px 10px;
+  font-size: 0.9rem;
+}
+.subtabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 14px;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 4px;
+  border: 1px solid var(--line);
+}
+.subtabs button {
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: var(--mute);
+  font: inherit;
+  font-size: 0.82rem;
+  padding: 8px 6px;
+  border-radius: 9px;
+}
+.subtabs button.on {
+  background: var(--acc-soft);
+  color: var(--ink);
+  font-weight: 500;
+}
+.char-header {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: var(--acc-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
+.char-stats { flex: 1; }
+.char-stats .name { font-weight: 600; font-size: 1.05rem; }
+.char-stats .meta { color: var(--mute); font-size: 0.8rem; margin-top: 2px; }
+.stat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.stat-box {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  text-align: center;
+}
+.stat-box .val { font-weight: 600; font-size: 1.1rem; }
+.stat-box .lbl { font-size: 0.72rem; color: var(--mute); margin-top: 2px; }
+.rarity-common { color: #9e9e9e; }
+.rarity-uncommon { color: #4caf50; }
+.rarity-rare { color: #2196f3; }
+.rarity-epic { color: #9c27b0; }
+.rarity-legendary { color: #ffc107; }
+.rarity-extralegendary { color: #e65100; }
+.rarity-mythic { color: #f44336; }
+nav {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  display: flex;
+  background: var(--card);
+  border-top: 1px solid var(--line);
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  z-index: 110;
+  pointer-events: auto;
+}
+nav button {
+  flex: 1;
+  min-height: 56px;
+  background: none;
+  border: 0;
+  color: var(--mute);
+  font: inherit;
+  font-size: 0.72rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+nav button.on { color: var(--acc); }
+nav button span.icon { font-size: 1.15rem; line-height: 1; }
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
+.dot.on { background: #4caf50; }
+.feed { font-size: 0.82rem; color: var(--mute); max-height: 130px; overflow-y: auto; }
+.feed div { padding: 5px 0; border-bottom: 1px solid var(--line); }
+.share-box {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  font-size: 0.85rem;
+}
+.share-box code { font-size: 0.75rem; word-break: break-all; color: var(--mute); }
+input, select {
+  font: inherit;
+  color: var(--ink);
+  background: var(--acc-soft);
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 10px;
+  max-width: 100%;
+}
+.rs {
+  background: none;
+  border: 0;
+  color: var(--mute);
+  text-decoration: underline;
+  font: inherit;
+  font-size: 0.8rem;
+  padding: 12px 0;
+}
+.mg-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:100;align-items:center;justify-content:center;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom,0))}
+.mg-overlay.show{display:flex}
+.mg-box{background:var(--card);border:1px solid var(--line);border-radius:18px;width:100%;max-width:360px;max-height:90vh;overflow:auto;padding:18px 16px 16px}
+.mg-box h2{margin:0 0 4px;font-size:1.05rem;font-weight:600}
+.mg-box .mg-sub{color:var(--mute);font-size:.82rem;margin-bottom:14px}
+.mg-area{background:var(--bg);border-radius:14px;min-height:150px;padding:14px;position:relative;overflow:hidden;touch-action:manipulation}
+.mg-bar-track{height:28px;background:var(--line);border-radius:14px;position:relative;overflow:hidden;margin:18px 0 12px}
+.mg-bar-zone{position:absolute;top:0;bottom:0;background:rgba(90,143,123,.45);border-radius:14px}
+.mg-bar-cursor{position:absolute;top:2px;bottom:2px;width:6px;background:var(--ink);border-radius:3px;left:0}
+.mg-score{text-align:center;font-weight:600;margin:8px 0}
+.mg-btns{display:flex;gap:8px;margin-top:12px}
+.mg-btns button{flex:1}
+.mg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mg-grid button{min-height:52px;border:1px solid var(--line);border-radius:12px;background:var(--card);font:inherit;font-size:1.2rem;color:var(--ink)}
+.mg-grid button.good{background:var(--acc);color:var(--on);border-color:var(--acc)}
+.mg-grid button.bad{background:#c45c5c;color:#fff;border-color:#c45c5c}
+.mg-seq{display:flex;gap:8px;justify-content:center;margin:12px 0;flex-wrap:wrap}
+.mg-seq span{width:40px;height:40px;border-radius:10px;background:var(--line);display:flex;align-items:center;justify-content:center;font-size:1.1rem}
+.mg-seq span.on{background:var(--acc);color:var(--on)}
+.mg-seq span.ok{background:#4caf50;color:#fff}
+.mg-seq span.no{background:#c45c5c;color:#fff}
+.mg-fish{text-align:center;padding:28px 8px;font-size:2.5rem}
+.mg-fish.bite{animation:mgpulse .4s ease infinite}
+@keyframes mgpulse{50%{transform:scale(1.15)}}
+.mg-cook{display:flex;flex-direction:column;gap:10px}
+.mg-cook .item{display:flex;align-items:center;gap:10px;padding:10px;background:var(--card);border-radius:12px;border:1px solid var(--line)}
+.mg-cook .item .heat{flex:1;height:10px;background:var(--line);border-radius:5px;overflow:hidden}
+.mg-cook .item .heat i{display:block;height:100%;width:0;background:#4caf50}
+.mg-start-btn{width:100%;margin-top:10px}
+</style>
+</head>
+<body>
+<header>
+  <div class="hd">
+    <b>La Team</b>
+    <span class="money"><span id="hpLabel">❤️ 50</span> · <span id="gold">0 €</span></span>
+  </div>
+  <div class="status" id="cn">Choisis une activité</div>
+  <div class="progress-line"><i id="cb"></i></div>
+</header>
+
+<main>
+  <div class="toast" id="toast"><button id="tok">OK</button><span id="tt"></span></div>
+  <div class="letter-modal" id="letterModal" role="dialog" aria-modal="true" aria-labelledby="letterTitle">
+    <div class="letter-box">
+      <div class="letter-title">
+        <b id="letterTitle">📝 Lettre</b>
+        <button class="letter-close" id="letterClose" aria-label="Fermer">×</button>
+      </div>
+      <div class="letter-message" id="letterMessage"></div>
+      <button class="btn primary letter-ok" id="letterOk">Fermer</button>
+    </div>
+  </div>
+
+  <div class="letter-modal" id="incomingItemModal" role="dialog" aria-modal="true" aria-labelledby="incomingItemTitle" style="z-index:3000">
+    <div class="letter-box" style="width:min(460px,100%);text-align:center">
+      <div class="letter-title">
+        <b id="incomingItemTitle">📨 Objet reçu</b>
+      </div>
+      <div class="letter-message" id="incomingItemMessage"></div>
+      <div id="incomingItemEffect" style="font-weight:700;font-size:1.05rem;margin:16px 0"></div>
+      <button class="btn primary letter-ok" id="incomingItemOk">Continuer</button>
+    </div>
+  </div>
+
+  <section id="p-act">
+    <div class="pills" id="pills"></div>
+    <div class="lvl-row"><span id="lv">Niveau 1</span><span id="sp">×1,00</span></div>
+    <div class="lvl-bar"><i id="xb"></i></div>
+    <button class="btn primary mg-start-btn" id="btnMg">🎮 Mini-jeu</button>
+    <div id="acts"></div>
+  </section>
+
+  <section id="p-bag" hidden>
+    <div class="subtabs" id="bagTabs">
+      <button data-sub="mat" class="on">Matériaux</button>
+      <button data-sub="eq">Équipement</button>
+      <button data-sub="conso">Consos</button>
+    </div>
+    <div id="bag-mat"></div>
+    <div id="bag-eq" hidden></div>
+    <div id="bag-conso" hidden></div>
+  </section>
+
+  <section id="p-perso" hidden>
+    <div class="subtabs" id="persoTabs">
+      <button data-psub="fiche" class="on">Fiche</button>
+      <button data-psub="quequette">Quequette</button>
+      <button data-psub="loot">Loots</button>
+    </div>
+    <div id="perso-fiche">
+      <div class="char-header">
+        <div class="avatar" id="avatar">👷</div>
+        <div class="char-stats">
+          <div class="name" id="charName">—</div>
+          <div class="meta" id="charMeta">Niveau total 0</div>
+        </div>
+      </div>
+      <div class="stat-grid" id="statGrid"></div>
+      <h3>Équipé</h3>
+      <div id="equipped"></div>
+      <h3>Compétences</h3>
+      <div id="skillsOverview"></div>
+    </div>
+    <div id="perso-quequette" hidden>
+      <p class="status" style="margin:0 0 10px">Objet bonus unique — 1 seule de chaque dans le jeu. Pas de vente PNJ.</p>
+      <div id="quequetteActive"></div>
+      <h3>Ta collection</h3>
+      <div id="quequetteList"></div>
+    </div>
+    <div id="perso-loot" hidden>
+      <div id="lootHistory"></div>
+    </div>
+  </section>
+
+  <section id="p-shop" hidden>
+    <div class="subtabs" id="shopTabs">
+      <button data-ssub="craft" class="on">Craft</button>
+      <button data-ssub="buy">Acheter</button>
+      <button data-ssub="sell">Vendre</button>
+      <button data-ssub="peer">Potes</button>
+    </div>
+    <div id="shop-craft">
+      <h3>Outils</h3>
+      <div id="tools"></div>
+      <h3>Équipement de bagarre</h3>
+      <div id="eqCraft"></div>
+      <h3>Comptoir</h3>
+      <div id="bar"></div>
+      <h3>Nouvelle saison</h3>
+      <div class="card">
+        <div class="row">
+          <div class="info"><b>Recommencer</b><small id="rt"></small></div>
+          <button class="btn primary" id="rb">Lancer</button>
+        </div>
+      </div>
+      <button class="rs" id="rs">Effacer la partie</button>
+    </div>
+    <div id="shop-buy" hidden>
+      <p class="status" style="margin:0 0 10px">Marché PNJ — tout s'achète (plus cher qu'à la revente)</p>
+      <div id="marketBuy"></div>
+    </div>
+    <div id="shop-sell" hidden>
+      <p class="status" style="margin:0 0 10px">Vends tout au marché (prix de base)</p>
+      <div id="marketSell"></div>
+    </div>
+    <div id="shop-peer" hidden>
+      <p class="status" style="margin:0 0 10px">Marché entre potes — mets en vente ou achète</p>
+      <h3>Mettre en vente</h3>
+      <div class="card">
+        <div class="row" style="flex-wrap:wrap;gap:8px">
+          <select id="mItem"></select>
+          <input id="mQty" type="number" min="1" value="1" style="width:56px">
+          <input id="mPrice" type="number" min="1" value="10" style="width:72px" placeholder="€">
+          <button class="btn primary" id="mList">Vendre</button>
+        </div>
+      </div>
+      <h3>Annonces</h3>
+      <div id="marketPeer"></div>
+    </div>
+  </section>
+
+  <section id="p-goal" hidden>
+    <div id="goals"></div>
+  </section>
+
+  <section id="p-boss" hidden>
+    <div id="bossCard"><div class="empty">Aucun boss…</div></div>
+  </section>
+
+  <section id="p-band" hidden>
+    <p class="status" id="bmsg" style="margin:0 0 10px">Connexion…</p>
+    <div class="card">
+      <div class="row">
+        <div class="info"><b>Pseudo</b><small id="pseudoHint">Visible par la bande · changer = 500 €</small></div>
+        <input id="pseudo" maxlength="14" placeholder="Ton pseudo" style="width:110px" readonly>
+      </div>
+      <button class="btn" id="btnRename" style="width:100%;margin-top:8px">Changer de pseudo (500 €)</button>
+    </div>
+    <div class="share-box">
+      <b>Inviter</b><br>
+      <code id="shareLink"></code><br>
+      <button class="btn primary" id="copyLink" style="margin-top:8px">Copier le lien</button>
+    </div>
+    <h3>En ligne</h3>
+    <div id="online"><div class="empty">Personne…</div></div>
+    <h3>Activité</h3>
+    <div id="feed" class="feed"><div class="empty">Rien pour le moment.</div></div>
+    <h3>Soirée (coop)</h3>
+    <div id="soiree"></div>
+    <h3>Défi du jour</h3>
+    <div id="defi"></div>
+    <h3>Classement</h3>
+    <div id="clas"></div>
+    <h3>Cadeaux</h3>
+    <div class="card">
+      <div class="row" style="flex-wrap:wrap;gap:8px">
+        <select id="gto"></select>
+        <select id="git"></select>
+        <input id="gq" type="number" min="1" value="1" style="width:56px">
+        <button class="btn primary" id="gsend">Envoyer</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="mg-overlay show" id="pseudoModal" style="z-index:200">
+  <div class="mg-box">
+    <h2>Bienvenue dans La Team</h2>
+    <div class="mg-sub">Choisis ton pseudo (visible par la bande). Tu pourras le changer plus tard pour 500 €.</div>
+    <input id="pseudoFirst" maxlength="14" placeholder="Ex: Coco, Nanard…" style="width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;margin:8px 0 12px">
+    <button class="btn primary" id="pseudoOk" style="width:100%">C'est parti</button>
+  </div>
+</div>
+
+<div class="mg-overlay" id="banterPopup" style="z-index:150">
+  <div class="mg-box" style="text-align:center">
+    <div id="banterText" style="font-size:1.05rem;line-height:1.45;margin:8px 0 16px;font-weight:500"></div>
+    <button class="btn primary" id="banterOk" style="width:100%">OK</button>
+  </div>
+</div>
+
+<div class="mg-overlay" id="mg">
+  <div class="mg-box">
+    <h2 id="mgTitle">Mini-jeu</h2>
+    <div class="mg-sub" id="mgSub"></div>
+    <div class="mg-area" id="mgArea"></div>
+    <div class="mg-score" id="mgScore"></div>
+    <div class="mg-btns">
+      <button class="btn" id="mgCancel">Fermer</button>
+      <button class="btn primary" id="mgAction">Go</button>
+    </div>
+  </div>
+</div>
+
+<nav>
+  <button data-tab="act" class="on"><span class="icon">🛠️</span>Jouer</button>
+  <button data-tab="bag"><span class="icon">🎒</span>Sac</button>
+  <button data-tab="perso"><span class="icon">👤</span>Perso</button>
+  <button data-tab="shop"><span class="icon">🔧</span>Atelier</button>
+  <button data-tab="goal"><span class="icon">📜</span>Quêtes</button>
+  <button data-tab="band"><span class="icon">👥</span>Bande</button>
+  <button data-tab="boss" id="navBoss" hidden><span class="icon">🍺</span>Boss</button>
+</nav>
+
+<script>
+/* Navigation bas : gestion directe des taps/clics pour éviter les ratés mobiles. */
+document.querySelectorAll('nav button[data-tab]').forEach(function(btn){
+  btn.addEventListener('click',function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    var tab=btn.dataset.tab;
+    if(!tab)return;
+    ['act','bag','perso','shop','goal','band','boss'].forEach(function(p){
+      var el=document.getElementById('p-'+p);
+      if(el)el.hidden=p!==tab;
+    });
+    document.querySelectorAll('nav button[data-tab]').forEach(function(b){
+      b.classList.toggle('on',b.dataset.tab===tab);
+    });
+    window.scrollTo(0,0);
+    if(tab==='boss'&&typeof window.renderBossTab==='function')window.renderBossTab();
+  },{passive:false});
+});
+var KEY='lateam-v2',CAP=8*3600,cur='bois';
+var SK=[
+['bois','Bricolage','👷','Nanard aux commandes. Ça tient… on verra.'],
+['mine','Recyclage','♻️','Poumes surveille. Rien ne se perd, sauf ta dignité.'],
+['forge','Garage','🔧','Le garage de Coco. Il devait passer. Il gère la famille.'],
+['peche','Pêche','🎣','Stalek déteste ça. Il vient quand même. Étrange.'],
+['cuisine','Barbecue','🔥','Riton au grill. Les extincteurs sont déjà sortis.'],
+['vigne','Vendanges','🍇','Paulo supervise. Interdit de dire « piquette » devant lui.'],
+['combat','Bagarre','🥊','On règle ça à la militaire. Coco approuve (quand il est là).']
+];
+var IT={
+palette:['Palette',2,'mat'],planche:['Planche de chêne',6,'mat'],poutre:['Poutre de charpente',18,'mat'],
+canette:['Canette',2,'mat'],ferraille:['Ferraille',6,'mat'],compo:['Composant rare',18,'mat'],
+alu:['Lingot d\'alu',8,'mat'],acier:['Lingot d\'acier',22,'mat'],titane:['Lingot de titane',65,'mat'],
+goujon:['Goujon',2,'mat'],brochet:['Brochet',6,'mat'],silure:['Silure',18,'mat'],
+saucisse:['Saucisse grillée',5,'conso'],bbq:['Brochet au barbecue',14,'conso'],fume:['Silure fumé',40,'conso'],
+raisin:['Raisin',3,'mat'],piquette:['Piquette',14,'conso'],cru:['Grand cru',60,'conso'],or:['€',0,'mat']
+};
+var DROP={
+/* Matériaux / consos */
+vis:{nom:'Vis rouillée',cat:'mat',rare:'common',val:1},
+clou:{nom:'Clou tordu',cat:'mat',rare:'common',val:1},
+corde:{nom:'Bout de corde',cat:'mat',rare:'common',val:2},
+chiffon:{nom:'Chiffon',cat:'mat',rare:'common',val:1},
+scotch:{nom:'Scotch usé',cat:'mat',rare:'uncommon',val:4},
+cafe:{nom:'Café serré',cat:'conso',rare:'common',val:3},
+biere:{nom:'Bière tiède',cat:'conso',rare:'common',val:4},
+/* Lettres & papiers de la bande */
+papier:{nom:'Bout de papier',cat:'note',rare:'common'},
+lettre:{nom:'Lettre anonyme',cat:'note',rare:'uncommon'},
+postit:{nom:'Post-it douteux',cat:'note',rare:'common'},
+carnet:{nom:'Page de carnet',cat:'note',rare:'rare'},
+/* Malus (uniquement pendant un boss — disparaissent à la fin) */
+malus_poumes:{nom:'Se faire Poumes',cat:'malus',rare:'uncommon',effect:'atk',dur:3,msg:'tu viens de te faire Poumes'},
+malus_verre:{nom:'Verre reservi',cat:'malus',rare:'rare',effect:'stun',dur:2,msg:'t\'a reservi ton verre — tu vas te coucher'},
+malus_cabane:{nom:'Cabane de Nanard',cat:'malus',rare:'uncommon',effect:'def',dur:3,msg:'s\'est pris la cabane de Nanard sur la tronche'},
+malus_saucisse:{nom:'Saucisse de Riton',cat:'malus',rare:'uncommon',effect:'dmg',dur:3,msg:'doit digérer une saucisse de Riton (cramée)'},
+malus_silure:{nom:'Silure de Stalek',cat:'malus',rare:'rare',effect:'atk',dur:4,msg:'s\'est fait coller un silure par Stalek'},
+malus_piquette:{nom:'Piquette de Paulo',cat:'malus',rare:'uncommon',effect:'dmg',dur:2,msg:'a trinqué de force à la piquette de Paulo'},
+malus_canape:{nom:'Canapé de Coco',cat:'malus',rare:'epic',effect:'stun',dur:3,msg:'est coincé sur le canapé de Coco'},
+duel_msg:{nom:'Faut qu\'on parle',cat:'social',rare:'uncommon'},
+beer_msg:{nom:'On boit une bière',cat:'social',rare:'uncommon'},
+item_pipe:{nom:'La pipe',cat:'social',rare:'rare'},
+paye_coup:{nom:'Paye ton coup',cat:'social',rare:'uncommon'},
+deathnote:{nom:'Deathnote',cat:'social',rare:'mythic',rarityLabel:'Très rare'},
+item_branlette:{nom:'La branlette',cat:'buff',rare:'uncommon'},
+item_pute:{nom:'La pute',cat:'buff',rare:'rare'},
+item_baise:{nom:'La baise',cat:'buff',rare:'rare'},
+item_momole:{nom:'Momole',cat:'curse',rare:'uncommon'},
+heal_binouze:{nom:'Binouze',cat:'heal',rare:'uncommon',heal:25},
+heal_grillade:{nom:'Grillade',cat:'heal',rare:'uncommon',heal:40},
+heal_pastis:{nom:'Pastis',cat:'heal',rare:'uncommon',heal:30},
+heal_pain:{nom:'Pain beurré',cat:'heal',rare:'common',heal:15},
+heal_fromage:{nom:'Fromage qui pue',cat:'heal',rare:'common',heal:20},
+heal_sandwich:{nom:'Sandwich triangle',cat:'heal',rare:'common',heal:25},
+heal_soupe:{nom:'Soupe de Poumes',cat:'heal',rare:'uncommon',heal:35},
+heal_cafe:{nom:'Café serré de Coco',cat:'heal',rare:'common',heal:15},
+heal_piquette:{nom:'Piquette de secours',cat:'heal',rare:'uncommon',heal:30},
+heal_saucisse:{nom:'Saucisse de Riton',cat:'heal',rare:'uncommon',heal:35},
+heal_silure:{nom:'Silure en boîte',cat:'heal',rare:'rare',heal:50},
+heal_nutella:{nom:'Pot de Nutella de Nanard',cat:'heal',rare:'uncommon',heal:40},
+heal_eau:{nom:'Eau du robinet',cat:'heal',rare:'common',heal:10},
+heal_pizza:{nom:'Pizza 3 jours',cat:'heal',rare:'uncommon',heal:45},
+heal_kebab:{nom:'Kebab douteux',cat:'heal',rare:'uncommon',heal:40},
+heal_tiramisu:{nom:'Tiramisu du bar',cat:'heal',rare:'rare',heal:55},
+heal_doliprane:{nom:'Doliprane de Coco',cat:'heal',rare:'rare',heal:60},
+heal_redbull:{nom:'Red Bull chaude',cat:'heal',rare:'uncommon',heal:20},
+heal_glace:{nom:'Glace fondue',cat:'heal',rare:'common',heal:15},
+heal_chips:{nom:'Chips écrasées',cat:'heal',rare:'common',heal:12},
+heal_olive:{nom:'Bol d\'olives',cat:'heal',rare:'common',heal:18},
+heal_raclette:{nom:'Raclette d\'urgence',cat:'heal',rare:'rare',heal:70},
+heal_bouillon:{nom:'Bouillon de botte',cat:'heal',rare:'uncommon',heal:25},
+heal_apero:{nom:'Apéro',cat:'heal',rare:'epic',heal:40,healAll:true},
+ticket_10:{nom:'Ticket -10%',cat:'ticket',rare:'common',pct:10},
+ticket_20:{nom:'Ticket -20%',cat:'ticket',rare:'common',pct:20},
+ticket_30:{nom:'Ticket -30%',cat:'ticket',rare:'uncommon',pct:30},
+ticket_40:{nom:'Ticket -40%',cat:'ticket',rare:'uncommon',pct:40},
+ticket_50:{nom:'Ticket -50%',cat:'ticket',rare:'rare',pct:50},
+ticket_60:{nom:'Ticket -60%',cat:'ticket',rare:'epic',pct:60},
+ticket_70:{nom:'Ticket -70%',cat:'ticket',rare:'legendary',pct:70},
+/* Équipement — Commun */
+gants_usés:{nom:'Gants usés',cat:'eq',rare:'common',slot:'mains',bonus:{sp:0.01,atk:1,def:1}},
+casquette:{nom:'Casquette',cat:'eq',rare:'common',slot:'tete',bonus:{xp:0.02,def:1}},
+tongs:{nom:'Tongs',cat:'eq',rare:'common',slot:'pieds',bonus:{sp:0.01,def:1}},
+tshirt_blanc:{nom:'T-shirt blanc',cat:'eq',rare:'common',slot:'corps',bonus:{def:1}},
+ceinture_ficelle:{nom:'Ceinture ficelle',cat:'eq',rare:'common',slot:'taille',bonus:{sp:0.01}},
+baton:{nom:'Bâton trouvé',cat:'eq',rare:'common',slot:'arme',bonus:{atk:2}},
+chaussettes:{nom:'Chaussettes dépareillées',cat:'eq',rare:'common',slot:'pieds',bonus:{def:1}},
+bonnet:{nom:'Bonnet troué',cat:'eq',rare:'common',slot:'tete',bonus:{def:1,xp:0.01}},
+gilet_fluo:{nom:'Gilet fluo',cat:'eq',rare:'common',slot:'corps',bonus:{def:2}},
+sac_plastique:{nom:'Sac plastique',cat:'eq',rare:'common',slot:'taille',bonus:{or:0.02}},
+claquettes:{nom:'Claquettes',cat:'eq',rare:'common',slot:'pieds',bonus:{sp:0.02}},
+lunettes_soleil:{nom:'Lunettes de soleil cassées',cat:'eq',rare:'common',slot:'tete',bonus:{atk:1}},
+pull_moche:{nom:'Pull de Noël',cat:'eq',rare:'common',slot:'corps',bonus:{def:2,xp:0.01}},
+couteau_beurre:{nom:'Couteau à beurre',cat:'eq',rare:'common',slot:'arme',bonus:{atk:3}},
+/* Inhabituel */
+gants:{nom:'Gants de travail',cat:'eq',rare:'uncommon',slot:'mains',bonus:{sp:0.03,atk:3,def:2}},
+casque:{nom:'Casque de chantier',cat:'eq',rare:'uncommon',slot:'tete',bonus:{xp:0.05,def:4}},
+bottes:{nom:'Bottes caoutchouc',cat:'eq',rare:'uncommon',slot:'pieds',bonus:{sp:0.02,def:3}},
+batte_bois:{nom:'Batte en bois',cat:'eq',rare:'uncommon',slot:'arme',bonus:{or:0.15,atk:6}},
+sweat:{nom:'Sweat à capuche',cat:'eq',rare:'uncommon',slot:'corps',bonus:{def:4,xp:0.03}},
+ceinture_cuir:{nom:'Ceinture en cuir',cat:'eq',rare:'uncommon',slot:'taille',bonus:{atk:2,def:2}},
+marteau:{nom:'Marteau de Nanard',cat:'eq',rare:'uncommon',slot:'arme',bonus:{atk:7}},
+baskets:{nom:'Baskets usées',cat:'eq',rare:'uncommon',slot:'pieds',bonus:{sp:0.04,def:2}},
+casquette_pro:{nom:'Casquette pro',cat:'eq',rare:'uncommon',slot:'tete',bonus:{xp:0.04,def:2}},
+gants_peche:{nom:'Gants de pêche',cat:'eq',rare:'uncommon',slot:'mains',bonus:{sp:0.02,atk:2}},
+tablier:{nom:'Tablier de Riton',cat:'eq',rare:'uncommon',slot:'corps',bonus:{def:3,or:0.05}},
+sacoche:{nom:'Sacoche de Poumes',cat:'eq',rare:'uncommon',slot:'taille',bonus:{or:0.08,sp:0.02}},
+canne:{nom:'Canne de Stalek',cat:'eq',rare:'uncommon',slot:'arme',bonus:{atk:5,xp:0.03}},
+bouteille:{nom:'Bouteille vide',cat:'eq',rare:'uncommon',slot:'arme',bonus:{atk:4}},
+/* Rare */
+lunettes:{nom:'Lunettes de sécu',cat:'eq',rare:'rare',slot:'tete',bonus:{xp:0.08,def:5,atk:1}},
+ceinture:{nom:'Ceinture à outils',cat:'eq',rare:'rare',slot:'taille',bonus:{sp:0.05,atk:4,def:3}},
+veste_jean:{nom:'Veste en jean',cat:'eq',rare:'rare',slot:'corps',bonus:{def:6,atk:3}},
+chaussures_secu:{nom:'Chaussures de sécu',cat:'eq',rare:'rare',slot:'pieds',bonus:{def:5,sp:0.03}},
+gants_renforces:{nom:'Gants renforcés',cat:'eq',rare:'rare',slot:'mains',bonus:{atk:5,def:4}},
+pied_de_biche:{nom:'Pied-de-biche',cat:'eq',rare:'rare',slot:'arme',bonus:{atk:10,or:0.05}},
+casque_moto:{nom:'Casque de moto',cat:'eq',rare:'rare',slot:'tete',bonus:{def:7,xp:0.05}},
+ceinture_cartouches:{nom:'Ceinture cartouches',cat:'eq',rare:'rare',slot:'taille',bonus:{atk:6,or:0.08}},
+cisailles:{nom:'Cisailles pro',cat:'eq',rare:'rare',slot:'arme',bonus:{atk:9,sp:0.03}},
+bottes_acier:{nom:'Bottes à embout',cat:'eq',rare:'rare',slot:'pieds',bonus:{def:6,atk:2}},
+masque_soudure:{nom:'Masque de soudure',cat:'eq',rare:'rare',slot:'tete',bonus:{def:6,xp:0.06}},
+gants_box:{nom:'Gants de boxe',cat:'eq',rare:'rare',slot:'mains',bonus:{atk:8,def:2}},
+/* Épique */
+blouson:{nom:'Blouson de biker',cat:'eq',rare:'epic',slot:'corps',bonus:{xp:0.12,or:0.1,atk:5,def:8}},
+keway:{nom:'K-way fluorescent',cat:'eq',rare:'epic',slot:'corps',bonus:{sp:0.08,def:7,xp:0.08}},
+hache:{nom:'Hache de chantier',cat:'eq',rare:'epic',slot:'arme',bonus:{atk:14,or:0.1}},
+casque_pompier:{nom:'Casque de pompier',cat:'eq',rare:'epic',slot:'tete',bonus:{def:10,xp:0.1}},
+gants_kevlar:{nom:'Gants kevlar',cat:'eq',rare:'epic',slot:'mains',bonus:{atk:8,def:8}},
+rangers:{nom:'Rangers militaires',cat:'eq',rare:'epic',slot:'pieds',bonus:{def:8,sp:0.06,atk:3}},
+ceinture_tactique:{nom:'Ceinture tactique',cat:'eq',rare:'epic',slot:'taille',bonus:{atk:7,def:5,sp:0.04}},
+tronconneuse:{nom:'Tronçonneuse',cat:'eq',rare:'epic',slot:'arme',bonus:{atk:16,sp:0.05}},
+tablier_plomb:{nom:'Tablier de plomb',cat:'eq',rare:'epic',slot:'corps',bonus:{def:12,or:0.05}},
+lunettes_pro:{nom:'Lunettes laser',cat:'eq',rare:'epic',slot:'tete',bonus:{atk:6,xp:0.12}},
+/* Légendaire */
+combinaison:{nom:'Combinaison pro',cat:'eq',rare:'legendary',slot:'corps',bonus:{xp:0.18,sp:0.08,atk:8,def:12}},
+excalibur_chantier:{nom:'Épée de palette',cat:'eq',rare:'legendary',slot:'arme',bonus:{atk:20,or:0.15,xp:0.1}},
+casque_spatial:{nom:'Casque de chantier doré',cat:'eq',rare:'legendary',slot:'tete',bonus:{def:14,xp:0.15}},
+gants_titans:{nom:'Gants de titan',cat:'eq',rare:'legendary',slot:'mains',bonus:{atk:12,def:10,sp:0.05}},
+bottes_jet:{nom:'Bottes propulsées',cat:'eq',rare:'legendary',slot:'pieds',bonus:{sp:0.12,def:10,atk:5}},
+ceinture_or:{nom:'Ceinture en or de Paulo',cat:'eq',rare:'legendary',slot:'taille',bonus:{or:0.2,atk:8,def:6}},
+marteau_thor:{nom:'Marteau de Nanard+',cat:'eq',rare:'legendary',slot:'arme',bonus:{atk:22,def:4}},
+armure_peche:{nom:'Armure de pêcheur',cat:'eq',rare:'legendary',slot:'corps',bonus:{def:14,xp:0.12,sp:0.05}},
+/* Extra légendaire */
+armure_chantier:{nom:'Armure de chantier',cat:'eq',rare:'extralegendary',slot:'corps',bonus:{xp:0.25,sp:0.12,or:0.15,atk:12,def:18}},
+lame_titane:{nom:'Lame de titane',cat:'eq',rare:'extralegendary',slot:'arme',bonus:{atk:28,or:0.2,xp:0.1}},
+couronne_poumes:{nom:'Couronne de canettes',cat:'eq',rare:'extralegendary',slot:'tete',bonus:{def:16,xp:0.2,or:0.1}},
+gants_dieux:{nom:'Gants des dieux du garage',cat:'eq',rare:'extralegendary',slot:'mains',bonus:{atk:16,def:14,sp:0.08}},
+bottes_hermes:{nom:'Bottes d\'Hermès (Contrefaçon)',cat:'eq',rare:'extralegendary',slot:'pieds',bonus:{sp:0.18,def:12,atk:6}},
+ceinture_champion:{nom:'Ceinture de champion',cat:'eq',rare:'extralegendary',slot:'taille',bonus:{atk:12,def:10,or:0.15,xp:0.1}},
+/* Mythique */
+excalibat:{nom:'Excalibat',cat:'eq',rare:'mythic',slot:'arme',bonus:{or:0.4,xp:0.2,atk:25,def:5}},
+armure_bande:{nom:'Armure de la Bande',cat:'eq',rare:'mythic',slot:'corps',bonus:{atk:18,def:22,xp:0.25,sp:0.1,or:0.2}},
+casque_legend:{nom:'Casque de la légende',cat:'eq',rare:'mythic',slot:'tete',bonus:{def:20,xp:0.3,atk:8}},
+gants_apocalypse:{nom:'Gants de l\'apocalypse',cat:'eq',rare:'mythic',slot:'mains',bonus:{atk:22,def:16,sp:0.1}},
+bottes_fin:{nom:'Bottes de la fin des temps',cat:'eq',rare:'mythic',slot:'pieds',bonus:{sp:0.25,def:15,atk:10}},
+ceinture_univers:{nom:'Ceinture de l\'univers',cat:'eq',rare:'mythic',slot:'taille',bonus:{atk:15,def:15,or:0.3,xp:0.2,sp:0.1}},
+/* Uniques — 1 seule dans tout le multijoueur */
+q_nanard:{nom:'La Quequette de Nanard',cat:'eq',rare:'mythic',slot:'bonus',unique:true,bonus:{atk:18,def:10,xp:0.15,sp:0.08}},
+q_riton:{nom:'La Quequette de Riton',cat:'eq',rare:'mythic',slot:'bonus',unique:true,bonus:{atk:20,def:6,or:0.25,sp:0.05}},
+q_poumes:{nom:'La Quequette de Poumes',cat:'eq',rare:'mythic',slot:'bonus',unique:true,bonus:{atk:12,def:16,xp:0.2}},
+q_stalek:{nom:'La Quequette de Stalek',cat:'eq',rare:'mythic',slot:'bonus',unique:true,bonus:{atk:15,def:12,sp:0.12}},
+q_paulo:{nom:'La Quequette de Paulo',cat:'eq',rare:'mythic',slot:'bonus',unique:true,bonus:{atk:16,def:14,or:0.2,xp:0.1}},
+q_coco:{nom:'La Quequette de Coco',cat:'eq',rare:'mythic',slot:'bonus',unique:true,bonus:{atk:22,def:18,xp:0.12,sp:0.1,or:0.15}},
+/* Coffres */
+coffre_bois:{nom:'Coffre en bois',cat:'chest',rare:'common'},
+coffre_fer:{nom:'Coffre en fer',cat:'chest',rare:'uncommon'},
+coffre_or:{nom:'Coffre doré',cat:'chest',rare:'rare'},
+coffre_cristal:{nom:'Coffre de cristal',cat:'chest',rare:'epic'},
+coffre_legende:{nom:'Coffre légendaire',cat:'chest',rare:'legendary'}
+};
+/* Tables matériaux/consos uniquement (équipements gérés à part) */
+var DROP_TABLE={
+bois:{vis:40,clou:35,corde:15,scotch:8,cafe:2,papier:6,postit:4},
+mine:{vis:25,chiffon:30,scotch:15,corde:15,cafe:5,biere:5,papier:5,lettre:2},
+forge:{vis:25,clou:25,scotch:18,chiffon:12,cafe:10,biere:10,postit:5,papier:4},
+peche:{corde:40,chiffon:25,cafe:15,biere:12,scotch:8,papier:5,lettre:2},
+cuisine:{chiffon:30,cafe:25,biere:20,scotch:15,corde:10,postit:6,papier:4},
+vigne:{corde:30,chiffon:25,biere:20,cafe:15,scotch:10,lettre:3,papier:5},
+combat:{biere:35,cafe:25,chiffon:20,scotch:12,corde:8,postit:5,lettre:3,carnet:1}
+};
+/* Blagues de la bande (Hugo/Nanard, Paul/Paulo, Jérémy/Poumes, Steve/Stalek, Henry/Riton, Corentin/Coco) */
+var JOKES=[
+'Paulo t\'invite à niquer ta mère.',
+'🖕🏻',
+'Nanard a encore oublié où il a mis les clés. (Spoiler : dans le frigo.)',
+'Poumes dit que c\'est du compost. C\'est clairement autre chose.',
+'Stalek : « J\'aime pas la pêche. » *attrape un silure record*',
+'Riton a cramé le barbecue. Encore. Les extincteurs sont en rupture de stock.',
+'Coco devait venir. Il gère la famille. Comme d\'hab.',
+'Message de Paulo : « T\'es moche. » Fin du message.',
+'Nanard a construit une cabane. Elle tient… presque.',
+'Poumes alias Compostesse te souhaite une bonne journée. (Ironique.)',
+'Stalek a pêché un goujon. Il le montre à tout le monde depuis 3 heures.',
+'Riton : « C\'est pas cramé, c\'est fumé. »',
+'Coco envoie un pouce levé depuis le canapé.',
+'Lettre ouverte : « Qui a piqué le pastis de Coco ? » — Signé : tout le monde sauf Coco.',
+'Paulo a écrit : « Je suis le grand cru. Vous êtes la piquette. »',
+'Note de Nanard : « Besoin de 30 palettes. Et d\'un pot de Nutella. »',
+'Poumes a trié les canettes par couleur. Puis par date. Puis par humeur.',
+'Stalek refuse d\'admettre qu\'il aime la pêche. Les stats disent le contraire.',
+'Riton a mis le feu au plan de table de la soirée. Littéralement.',
+'Post-it de Coco : « Je passe plus tard. » (Il ne passera pas.)',
+'Paulo t\'a dessiné un doigt d\'honneur. Niveau artistique : 2/10. Message : clair.',
+'Nanard : « Ça va tenir. » *bruit de planche qui casse*',
+'Découvert dans la poche de Poumes : une canette et un rêve.',
+'Stalek a noté : « Ne jamais écouter Riton près d\'un barbecue. »',
+'Message collectif : « Coco, on t\'aime. Reviens. On a plus de piquette. »',
+'Paulo a laissé son numéro. C\'est juste « ntm ».',
+'Lettre de Riton : « J\'ai rien cramé cette fois. » (Mensonges.)',
+'Nanard propose un apéro. Lieu : la cabane qui penche.',
+'Poumes te doit 2 canettes. Il paie en compost.',
+'Stalek : « C\'était mieux avant. » Avant quoi ? Il sait pas.',
+'Coco a liké ton message de 2019. Il est actif.',
+'Nanard a mesuré la cabane. Elle fait 3m. Enfin… 2m80. Enfin… elle penche.',
+'Poumes a inventé un nouveau tri : les canettes « qui lui parlent ».',
+'Stalek a attrapé une botte. Il l\'a quand même montrée.',
+'Riton propose un barbecue végétarien. Personne ne le croit.',
+'Paulo deguste l\'air et dit que c\'est un 2019.',
+'Coco : « Je suis en route. » GPS : canapé.',
+'La bande a voté. Tu es officiellement le plus susceptible.',
+'Nanard vs la gravité : 0-1.',
+'Poumes collectionne les surnoms. Aujourd\'hui c\'est « '+po+' ».',
+'Stalek a inventé le silence olympique. Il détient le record.',
+'Riton a éteint un feu avec de la bière. Ça a empiré.',
+'Paulo t\'a mis 2/10. Sur quoi ? Sur tout.',
+'Coco a réservé un créneau. Dans 6 mois.'
+];
+/* Pools d'équipement par rareté */
+var EQ_BY_RARE={
+common:['gants_usés','casquette','tongs','tshirt_blanc','ceinture_ficelle','baton','chaussettes','bonnet','gilet_fluo','sac_plastique','claquettes','lunettes_soleil','pull_moche','couteau_beurre'],
+uncommon:['gants','casque','bottes','batte_bois','sweat','ceinture_cuir','marteau','baskets','casquette_pro','gants_peche','tablier','sacoche','canne','bouteille'],
+rare:['lunettes','ceinture','veste_jean','chaussures_secu','gants_renforces','pied_de_biche','casque_moto','ceinture_cartouches','cisailles','bottes_acier','masque_soudure','gants_box'],
+epic:['blouson','keway','hache','casque_pompier','gants_kevlar','rangers','ceinture_tactique','tronconneuse','tablier_plomb','lunettes_pro'],
+legendary:['combinaison','excalibur_chantier','casque_spatial','gants_titans','bottes_jet','ceinture_or','marteau_thor','armure_peche'],
+extralegendary:['armure_chantier','lame_titane','couronne_poumes','gants_dieux','bottes_hermes','ceinture_champion'],
+mythic:['excalibat','armure_bande','casque_legend','gants_apocalypse','bottes_fin','ceinture_univers']
+};
+/* Taux absolus par action terminée (équipement) */
+var EQ_RATES={
+common:0.010,        /* 1.0% */
+uncommon:0.0035,      /* 0.35% */
+rare:0.0014,          /* 0.14% */
+epic:0.00055,         /* 0.055% */
+legendary:0.0002,    /* 0.02% */
+extralegendary:0.00007,/* 0.007% */
+mythic:0.000035       /* 0.0035% */
+};
+/* Taux absolus coffres (très rares) */
+var CHEST_RATES={
+coffre_bois:0.0028,      /* 0.28% */
+coffre_fer:0.0010,      /* 0.10% */
+coffre_or:0.00032,       /* 0.032% */
+coffre_cristal:0.00009, /* 0.009% */
+coffre_legende:0.000025  /* 0.0025% */
+};
+/* Loot des coffres : {itemId: poids} — matériel + équipement possible */
+var CHEST_LOOT={
+coffre_bois:{
+  vis:25,clou:25,corde:15,chiffon:15,scotch:8,cafe:5,biere:5,
+  papier:12,postit:10,lettre:4,
+  gants_usés:8,casquette:6,tongs:6,gants:3,casque:2
+},
+coffre_fer:{
+  scotch:15,cafe:10,biere:10,corde:10,alu:8,acier:4,
+  papier:8,lettre:10,postit:8,carnet:3,
+  gants:12,casque:10,bottes:10,batte_bois:8,lunettes:5,ceinture:4
+},
+coffre_or:{
+  acier:12,titane:4,cru:6,fume:6,piquette:8,
+  lettre:12,carnet:10,postit:6,
+  lunettes:15,ceinture:15,gants:10,casque:8,blouson:8,batte_bois:8
+},
+coffre_cristal:{
+  titane:10,cru:8,fume:8,
+  carnet:15,lettre:10,
+  blouson:20,lunettes:12,ceinture:12,combinaison:15,batte_bois:8,gants:5
+},
+coffre_legende:{
+  titane:8,cru:10,
+  carnet:18,lettre:12,
+  combinaison:22,blouson:15,armure_chantier:12,excalibat:8,lunettes:10,ceinture:10,batte_bois:5
+}
+};
+var A=[
+/* ===== BRICOLAGE (Nanard) — ~30 ===== */
+['b_caisse','bois','Caisses pourries',1,8,4,0,{palette:1}],
+['b_palette','bois','Palettes de Nanard',1,10,5,0,{palette:1}],
+['b_tasseau','bois','Tasseaux bancals',2,11,5,0,{palette:1}],
+['b_clouage','bois','Clouer au feeling',2,12,6,0,{palette:1}],
+['b_sciage','bois','Sciage hasardeux',3,12,6,0,{palette:1}],
+['b_etagere','bois','Étagère qui penche',3,14,7,0,{palette:1}],
+['b_tabouret','bois','Tabouret douteux',4,14,7,0,{palette:1}],
+['b_cadre','bois','Cadre « artisanal »',4,15,8,0,{palette:1}],
+['b_planche','bois','Planches « ça va tenir »',5,16,9,0,{planche:1}],
+['b_poncage','bois','Poncage express',5,16,8,{palette:2},{planche:1}],
+['b_meuble','bois','Meuble IKEA inverse',6,18,10,{palette:2},{planche:1}],
+['b_porte','bois','Porte qui frotte',6,18,10,{planche:1},{planche:1}],
+['b_fenetre','bois','Fenêtre ouverte (toujours)',7,20,11,{planche:1},{planche:1}],
+['b_escalier','bois','Escalier à 3 marches',7,20,11,{planche:2},{planche:1}],
+['b_charpente','bois','Mini-charpente',8,22,12,{planche:2},{poutre:1}],
+['b_cabane','bois','Cabane qui penche',8,24,13,{planche:3},{poutre:1}],
+['b_poutre','bois','Poutres (prière requise)',9,26,14,0,{poutre:1}],
+['b_terrasse','bois','Terrasse pourrie',9,26,14,{poutre:1},{poutre:1}],
+['b_abri','bois','Abri de jardin',10,28,15,{poutre:1,planche:2},{poutre:1}],
+['b_ponton','bois','Ponton de Stalek',10,30,16,{poutre:2},{poutre:1}],
+['b_chalet','bois','Chalet 2m²',11,32,17,{poutre:2,planche:3},{poutre:1}],
+['b_ossature','bois','Ossature bois',12,34,18,{poutre:3},{poutre:2}],
+['b_meuniere','bois','Roue de meule',12,36,19,{poutre:2},{poutre:1}],
+['b_grenier','bois','Grenier rangé (non)',13,38,20,{poutre:2,planche:2},{poutre:2}],
+['b_hangar','bois','Hangar de Nanard',14,42,22,{poutre:4},{poutre:2}],
+['b_tour','bois','Tour de guet',15,45,24,{poutre:5},{poutre:3}],
+['b_cathedrale','bois','Cathédrale de palettes',16,50,28,{poutre:6,planche:5},{poutre:3}],
+['b_arche','bois','Arche de triomphe',17,55,30,{poutre:8},{poutre:4}],
+['b_nanard','bois','Chef-d\'œuvre de Nanard',18,60,35,{poutre:10},{poutre:5}],
+['b_legend','bois','La cabane légendaire',20,70,40,{poutre:12,planche:8},{poutre:6}],
+/* ===== RECYCLAGE (Poumes) ===== */
+['m_canette','mine','Canettes de Poumes',1,8,4,0,{canette:1}],
+['m_bouteille','mine','Bouteilles en vrac',1,10,5,0,{canette:1}],
+['m_carton','mine','Cartons mouillés',2,11,5,0,{canette:1}],
+['m_tri','mine','Tri par couleur',2,12,6,0,{canette:1}],
+['m_compost','mine','Compost douteux',3,12,6,0,{canette:1}],
+['m_ferraille','mine','Fouille déchetterie',3,14,7,0,{ferraille:1}],
+['m_cable','mine','Câbles entortillés',4,14,7,0,{ferraille:1}],
+['m_electro','mine','Grillage électroménager',4,15,8,0,{ferraille:1}],
+['m_moteur','mine','Moteur HS',5,16,9,{canette:2},{ferraille:1}],
+['m_pc','mine','Tour PC 2008',5,18,10,{ferraille:1},{ferraille:1}],
+['m_frigo','mine','Frigo abandonné',6,18,10,{ferraille:2},{ferraille:1}],
+['m_machine','mine','Machine à laver',6,20,11,{ferraille:2},{compo:1}],
+['m_compo','mine','Démontage électroménager',7,22,12,0,{compo:1}],
+['m_carte','mine','Cartes mères',7,22,12,{ferraille:1},{compo:1}],
+['m_cuivre','mine','Fils de cuivre',8,24,13,{compo:1},{compo:1}],
+['m_batterie','mine','Batteries mortes',8,26,14,{compo:1},{compo:1}],
+['m_solaire','mine','Panneau solaire HS',9,28,15,{compo:2},{compo:1}],
+['m_drone','mine','Drone dans l\'arbre',9,30,16,{compo:2},{compo:1}],
+['m_robot','mine','Aspirateur robot',10,32,17,{compo:2,ferraille:2},{compo:2}],
+['m_serveur','mine','Baie de serveurs',11,34,18,{compo:3},{compo:2}],
+['m_labo','mine','Matos de labo',12,36,20,{compo:3},{compo:2}],
+['m_satellite','mine','Débris « satellite »',13,40,22,{compo:4},{compo:3}],
+['m_poumes','mine','Trésor de Poumes',14,45,25,{compo:5},{compo:3}],
+['m_recycle','mine','Usine de recyclage',15,50,28,{compo:6,ferraille:4},{compo:4}],
+['m_composteur','mine','Composteur divin',16,55,30,{canette:20,compo:3},{compo:4}],
+['m_legend','mine','Relique de déchetterie',18,65,35,{compo:8},{compo:5}],
+['m_final','mine','Le tri parfait',20,70,40,{compo:10},{compo:6}],
+['m_giga','mine','Giga-ferraille',10,28,15,0,{ferraille:2}],
+['m_micro','mine','Micro-ondes grillé',11,30,16,{ferraille:2},{compo:1}],
+['m_tv','mine','Cathodique 90s',12,32,17,{ferraille:3},{compo:1}],
+/* ===== GARAGE (Coco) ===== */
+['f_alu','forge','Lingot alu (garage Coco)',1,12,6,{canette:2},{alu:1}],
+['f_vis','forge','Vis refaites',1,10,5,{canette:1},{alu:1}],
+['f_plaque','forge','Plaque d\'alu',2,12,6,{canette:3},{alu:1}],
+['f_cadre_v','forge','Cadre de vélo',2,14,7,{alu:1},{alu:1}],
+['f_jante','forge','Jantes douteuses',3,14,7,{alu:1},{alu:1}],
+['f_pot','forge','Pot d\'échappement',3,16,8,{alu:2},{alu:1}],
+['f_acier','forge','Lingot acier',4,18,10,{ferraille:2},{acier:1}],
+['f_ressort','forge','Ressorts récup',4,16,9,{ferraille:2},{acier:1}],
+['f_chaine','forge','Chaîne de moto',5,18,10,{acier:1},{acier:1}],
+['f_cle','forge','Clé de 12 trouvée',5,20,11,{acier:1},{acier:1}],
+['f_outil','forge','Outil maison',6,20,11,{acier:1,alu:1},{acier:1}],
+['f_moteur','forge','Bloc moteur',6,22,12,{acier:2},{acier:1}],
+['f_boite','forge','Boîte de vitesses',7,24,13,{acier:2},{acier:1}],
+['f_titane','forge','Lingot titane (rare)',8,28,16,{compo:2},{titane:1}],
+['f_suspension','forge','Suspension sport',8,26,14,{acier:2,alu:2},{acier:1}],
+['f_turbo','forge','Turbo sifflant',9,30,16,{titane:1},{titane:1}],
+['f_frein','forge','Freins « qui mordent »',9,28,15,{acier:2},{acier:1}],
+['f_carbu','forge','Carbu bricolé',10,32,17,{titane:1,acier:1},{titane:1}],
+['f_v8','forge','Bloc V8 garage',11,36,19,{titane:1,acier:3},{titane:1}],
+['f_chassis','forge','Châssis renforcé',12,40,22,{titane:2,acier:2},{titane:1}],
+['f_proto','forge','Prototype Coco',13,45,25,{titane:2,compo:2},{titane:2}],
+['f_course','forge','Bolide de course',14,50,28,{titane:3},{titane:2}],
+['f_f1','forge','Monoplace improvisée',15,55,30,{titane:4,acier:4},{titane:2}],
+['f_fusee','forge','Fusée de garage',16,60,34,{titane:5,compo:3},{titane:3}],
+['f_legend','forge','Légende du garage',18,70,40,{titane:8},{titane:4}],
+['f_soudure','forge','Soudure nocturne',7,22,12,{ferraille:3},{acier:1}],
+['f_polissage','forge','Polissage miroir',10,30,15,{alu:3},{alu:2}],
+['f_coco','forge','Coco aurait validé',12,38,20,{titane:1,acier:2},{titane:1}],
+['f_final','forge','Projet secret famille',20,75,45,{titane:10},{titane:5}],
+/* ===== PÊCHE (Stalek) ===== */
+['p_goujon','peche','Goujons « j\'aime pas ça »',1,8,4,0,{goujon:1}],
+['p_gardon','peche','Gardons du silence',1,10,5,0,{goujon:1}],
+['p_ablette','peche','Ablettes nerveuses',2,10,5,0,{goujon:1}],
+['p_perche','peche','Perches du canal',2,12,6,0,{goujon:1}],
+['p_carpe','peche','Carpe du dimanche',3,14,7,0,{goujon:1}],
+['p_brochet','peche','Brochets de Stalek',3,16,9,0,{brochet:1}],
+['p_sandre','peche','Sandre sournois',4,16,8,0,{brochet:1}],
+['p_truite','peche','Truite « sauvage »',4,18,9,0,{brochet:1}],
+['p_barbeau','peche','Barbeau du fleuve',5,18,10,0,{brochet:1}],
+['p_silure','peche','Le silure du silence',6,24,14,0,{silure:1}],
+['p_nuit','peche','Pêche de nuit',5,20,11,0,{brochet:1}],
+['p_glace','peche','Trou dans la glace',6,22,12,0,{brochet:1}],
+['p_mouche','peche','Pêche à la mouche',7,24,13,0,{brochet:1}],
+['p_leurre','peche','Leurre miracle',7,24,13,{goujon:2},{brochet:1}],
+['p_record','peche','Record personnel',8,28,15,0,{silure:1}],
+['p_concours','peche','Concours du village',8,30,16,0,{silure:1}],
+['p_etang','peche','Étang interdit',9,32,17,0,{silure:1}],
+['p_lac','peche','Lac profond',10,34,18,0,{silure:1}],
+['p_mer','peche','Sortie en mer',11,38,20,0,{silure:1}],
+['p_ocean','peche','Océan (presque)',12,42,22,0,{silure:2}],
+['p_botte','peche','Encore une botte',3,12,5,0,{goujon:1}],
+['p_caddie','peche','Caddie immergé',4,14,6,0,{goujon:1}],
+['p_pneu','peche','Pneu + algues',5,16,7,0,{goujon:1}],
+['p_stalek','peche','Stalek avoue aimer',14,50,28,0,{silure:2}],
+['p_legend','peche','Poisson légendaire',16,60,35,0,{silure:3}],
+['p_final','peche','Le poisson du silence',18,70,40,0,{silure:4}],
+['p_duo','peche','Pêche en duo',9,30,15,0,{brochet:2}],
+['p_surf','peche','Surfcasting',13,45,24,0,{silure:2}],
+['p_profondeur','peche','Ligne par 80m',15,55,30,0,{silure:3}],
+['p_mythique','peche','Mythe du canal',20,75,45,0,{silure:5}],
+/* ===== BARBECUE (Riton) ===== */
+['c_saucisse','cuisine','Saucisses (un peu cramées)',1,10,5,{goujon:1},{saucisse:1}],
+['c_chipo','cuisine','Chipolatas',1,10,5,{goujon:1},{saucisse:1}],
+['c_merguez','cuisine','Merguez « maison »',2,12,6,{goujon:1},{saucisse:1}],
+['c_steak','cuisine','Steak carbonisé',2,12,6,{goujon:2},{saucisse:1}],
+['c_brochette','cuisine','Brochettes bancales',3,14,7,{goujon:2},{saucisse:1}],
+['c_bbq','cuisine','Brochet façon Riton',3,16,9,{brochet:1},{bbq:1}],
+['c_poisson','cuisine','Poisson grillé',4,16,8,{brochet:1},{bbq:1}],
+['c_maquereau','cuisine','Maquereau fumé',4,18,9,{brochet:1},{bbq:1}],
+['c_cote','cuisine','Côte grillée',5,18,10,{brochet:2},{bbq:1}],
+['c_fume','cuisine','Silure « c\'est fumé »',6,26,14,{silure:1},{fume:1}],
+['c_marinade','cuisine','Marinade secrète',5,20,11,{brochet:1},{bbq:1}],
+['c_plancha','cuisine','Plancha improvisée',6,22,12,{brochet:2},{bbq:1}],
+['c_fumee','cuisine','Fumoir de Riton',7,24,13,{silure:1},{fume:1}],
+['c_burger','cuisine','Burger cramé',7,24,13,{saucisse:2},{bbq:1}],
+['c_ribs','cuisine','Travers caramélisés',8,28,15,{bbq:1},{fume:1}],
+['c_banquet','cuisine','Banquet de bande',9,32,17,{bbq:2,saucisse:2},{fume:1}],
+['c_festival','cuisine','Festival grillades',10,36,19,{fume:1},{fume:1}],
+['c_concours','cuisine','Concours BBQ',11,40,22,{fume:1,bbq:2},{fume:1}],
+['c_smoking','cuisine','Smoking 12h',12,45,25,{silure:2},{fume:2}],
+['c_legend','cuisine','Légende du grill',14,55,30,{fume:2,silure:2},{fume:2}],
+['c_extincteur','cuisine','Sans extincteur',3,14,6,{goujon:1},{saucisse:1}],
+['c_gaz','cuisine','Bouteille de gaz vide',4,16,7,{goujon:2},{saucisse:1}],
+['c_charbon','cuisine','Charbon arrosé',5,18,8,{brochet:1},{bbq:1}],
+['c_riton','cuisine','Signature Riton',15,60,35,{fume:3},{fume:3}],
+['c_final','cuisine','Le feu maîtrisé',18,70,40,{fume:4},{fume:4}],
+['c_apero','cuisine','Planche apéro',8,26,14,{saucisse:3},{bbq:1}],
+['c_veggie','cuisine','Légumes (oubliés)',2,12,5,{goujon:1},{saucisse:1}],
+['c_dessert','cuisine','Banane flambée',9,30,15,{bbq:1},{bbq:1}],
+['c_brunch','cuisine','Brunch grillé',11,38,20,{bbq:2},{fume:1}],
+['c_mythique','cuisine','Mythe du barbecue',20,80,50,{fume:5},{fume:5}],
+/* ===== VENDANGES (Paulo) ===== */
+['v_raisin','vigne','Raisin de Paulo',1,10,5,0,{raisin:1}],
+['v_grappe','vigne','Grappes vertes',1,10,5,0,{raisin:1}],
+['v_feuille','vigne','Effeuillage',2,12,6,0,{raisin:1}],
+['v_tri_r','vigne','Tri des grains',2,12,6,0,{raisin:1}],
+['v_press','vigne','Pressurage pied',3,14,7,{raisin:2},{raisin:1}],
+['v_piquette','vigne','La fameuse piquette',3,18,10,{raisin:3},{piquette:1}],
+['v_cuve','vigne','Cuve qui fuit',4,16,8,{raisin:2},{raisin:1}],
+['v_fermente','vigne','Fermentation libre',4,18,9,{raisin:3},{piquette:1}],
+['v_tonneau','vigne','Tonneau vieux',5,20,11,{raisin:3},{piquette:1}],
+['v_degust','vigne','Dégustation « pro »',5,20,10,{piquette:1},{piquette:1}],
+['v_cru','vigne','Grand cru (selon Paulo)',6,28,16,{raisin:5},{cru:1}],
+['v_assemblage','vigne','Assemblage secret',7,24,13,{piquette:2},{piquette:1}],
+['v_barrique','vigne','Élevage en barrique',8,30,16,{raisin:4},{cru:1}],
+['v_millesime','vigne','Millésime 2026',9,34,18,{raisin:5},{cru:1}],
+['v_cave','vigne','Descente en cave',10,36,20,{cru:1},{cru:1}],
+['v_salon','vigne','Salon des vins',11,40,22,{cru:1,piquette:2},{cru:1}],
+['v_concours','vigne','Médaille d\'or (auto)',12,45,25,{cru:2},{cru:1}],
+['v_chateau','vigne','Château Paulo',13,50,28,{cru:2,raisin:10},{cru:2}],
+['v_legend','vigne','Cru légendaire',15,60,35,{cru:3},{cru:2}],
+['v_final','vigne','Nectar des dieux',18,70,40,{cru:4},{cru:3}],
+['v_vendange','vigne','Vendange nocturne',6,22,12,0,{raisin:2}],
+['v_bourgeon','vigne','Ébourgeonnage',3,14,6,0,{raisin:1}],
+['v_taille','vigne','Taille de la vigne',4,16,7,0,{raisin:1}],
+['v_sulfit','vigne','Sulfitage « léger »',7,26,13,{raisin:3},{piquette:1}],
+['v_bouteille','vigne','Mise en bouteille',8,28,14,{piquette:2},{piquette:2}],
+['v_etiquette','vigne','Étiquettes chic',9,30,15,{piquette:1},{piquette:1}],
+['v_export','vigne','Export imaginaire',14,55,30,{cru:3},{cru:2}],
+['v_paulo','vigne','Validation Paulo',16,65,38,{cru:4},{cru:3}],
+['v_caveau','vigne','Caveau privé',12,42,22,{cru:1},{cru:1}],
+['v_mythique','vigne','Mythe du grand cru',20,80,50,{cru:6},{cru:4}],
+/* ===== BAGARRE ===== */
+['x_videur','combat','Le videur du bar',1,12,8,{saucisse:1},{or:6}],
+['x_client','combat','Client éméché',1,12,7,{saucisse:1},{or:5}],
+['x_parking','combat','Dispute parking',2,14,8,{saucisse:1},{or:6}],
+['x_voisin','combat','Le voisin qui râle',2,16,10,{bbq:1},{or:12}],
+['x_chien','combat','Le chien du voisin',3,14,8,{saucisse:1},{or:7}],
+['x_arbitre','combat','Arbitre de foot',3,16,9,{bbq:1},{or:10}],
+['x_supporter','combat','Supporter adverse',4,18,11,{bbq:1},{or:14}],
+['x_costaud','combat','Le costaud du camping',5,22,14,{fume:1},{or:30}],
+['x_biker','combat','Biker du bistrot',5,20,12,{bbq:1},{or:18}],
+['x_videur2','combat','Videur du club',6,24,15,{fume:1},{or:28}],
+['x_karate','combat','Karatéka du dimanche',6,22,13,{bbq:2},{or:20}],
+['x_boxeur','combat','Boxeur à la retraite',7,26,16,{fume:1},{or:32}],
+['x_rugby','combat','Pack de rugby',8,28,18,{fume:1},{or:36}],
+['x_dojo','combat','Dojo clandestin',8,30,19,{fume:1},{or:40}],
+['x_champion','combat','Champion régional',9,34,22,{fume:2},{or:50}],
+['x_tournoi','combat','Tournoi de la bande',10,38,25,{fume:2},{or:55}],
+['x_legion','combat','Ex-légionnaire',11,42,28,{fume:2},{or:65}],
+['x_mma','combat','Cage MMA improvisée',12,46,30,{fume:3},{or:75}],
+['x_final','combat','Boss du quartier',14,55,35,{fume:3},{or:90}],
+['x_legend','combat','Légende de la bagarre',16,65,42,{fume:4},{or:110}],
+['x_mythique','combat','Mythe invaincu',18,75,50,{fume:5},{or:140}],
+['x_paulo','combat','Paulo après 2 verres',4,18,10,{piquette:1},{or:15}],
+['x_riton','combat','Riton et l\'extincteur',5,20,11,{saucisse:2},{or:16}],
+['x_nanard','combat','Nanard et son marteau',6,22,12,{palette:3},{or:18}],
+['x_poumes','combat','Poumes moralisateur',3,16,9,{canette:5},{or:10}],
+['x_stalek','combat','Stalek silencieux',7,26,15,{brochet:2},{or:25}],
+['x_coco','combat','Coco de retour',10,36,24,{fume:1},{or:45}],
+['x_bande','combat','Toute la bande',15,60,40,{fume:3,cru:1},{or:100}],
+['x_ultime','combat','Ultime confrontation',20,90,60,{fume:6},{or:200}],
+['x_mirror','combat','Ton reflet bourré',12,40,26,{fume:2},{or:70}]
+].map(function(a){return{id:a[0],sk:a[1],nom:a[2],lvl:a[3],sec:a[4],xp:a[5],inn:a[6]||{},out:a[7]};});
+/* ===== PALIERS 21 → 50 =====
+   Chaque catégorie continue réellement sa progression : temps, XP et coût augmentent.
+   Les actions sont générées à partir du palier 20 afin de garder le jeu équilibré et léger.
+*/
+(function(){
+  var end={
+    bois:{name:'Bricolage',item:'poutre',item2:'planche',out:'poutre',prefix:'b'},
+    mine:{name:'Recyclage',item:'compo',item2:'ferraille',out:'compo',prefix:'m'},
+    forge:{name:'Garage',item:'titane',item2:'acier',out:'titane',prefix:'f'},
+    peche:{name:'Pêche',item:'silure',item2:'brochet',out:'silure',prefix:'p'},
+    cuisine:{name:'Barbecue',item:'fume',item2:'silure',out:'fume',prefix:'c'},
+    vigne:{name:'Vendanges',item:'cru',item2:'piquette',out:'cru',prefix:'v'},
+    combat:{name:'Bagarre',item:'fume',item2:'cru',out:'or',prefix:'x'}
+  };
+  var tiers={21:'Expert',25:'Maître',30:'Grand maître',35:'Élite',40:'Légende',45:'Mythique',50:'Divin'};
+  var masterNames={"bois":["Charpente renforcée","Étagère de compétition","Atelier bien organisé","Meuble presque droit","Cabane premium","Table de banquet","Pont de fortune","Escalier de maître","Cabane de luxe","Pergola du dimanche","Atelier de Nanard","Charpente XXL","Maison en palettes","Forteresse en bois","Chalet improvisé","Pont suspendu","Grande menuiserie","Manoir de palettes","Cathédrale en bois","Chef-d’œuvre du bricoleur","Scierie personnelle","Complexe résidentiel","Forteresse de la bande","Palais de Nanard","Citadelle en palettes","Quartier général","Ville en bois","Mégastructure en poutres","Monument du bricolage","Le chantier ultime"],"mine":["Tri industriel","Démontage express","Montagne de ferraille","Frigo de l’espace","Lave-linge mutant","Électroménager XXL","Atelier du récupérateur","Ferraille haute densité","Casse automobile","Serveur oublié","Stock de composants","Centre de tri géant","Robot industriel","Épave électronique","Bunker technologique","Usine de récupération","Mégacentrale de tri","Cimetière électronique","Mine urbaine","Trésor technologique","Décharge légendaire","Casse intersidérale","Complexe de recyclage","Montagne de composants","Usine zéro déchet","Empire de la récup","Mégacasse industrielle","Recyclage orbital","Ressources introuvables","Le recyclage ultime"],"forge":["Forge de précision","Pièce sur mesure","Bloc haute performance","Mécanique avancée","Moteur préparé","Transmission renforcée","Châssis compétition","Atelier de course","Prototype blindé","Moteur de compétition","Machine de Nanard","Bolide expérimental","Supercar de garage","Engin tout-terrain","Blindage artisanal","Moteur surpuissant","Prototype ultime","Machine infernale","Monstre mécanique","Chef-d’œuvre du garage","Forge industrielle","Moteur de guerre","Atelier légendaire","Prototype impossible","Bolide mythique","Machine de compétition","Usine de Nanard","Mécanique divine","Chef-d’œuvre mécanique","La forge ultime"],"peche":["Grosse prise","Pêche au lever du jour","Banc de brochets","Silure costaud","Pêche sportive","Gros poisson du canal","Session interminable","Canne renforcée","Lac mystérieux","Poisson record","Pêcheur de compétition","Expédition grand large","Silure géant","Bête du fond","Pêche en pleine tempête","Monstre du lac","Expédition légendaire","Poisson préhistorique","Roi du canal","Prise historique","Pêcheur de l’extrême","Fosse abyssale","Monstre des profondeurs","Expédition mythique","Créature du lac","Silure colossal","Roi des pêcheurs","Poisson impossible","Légende du canal","La prise ultime"],"cuisine":["Grillade premium","Plancha de compétition","Banquet amélioré","Barbecue XXL","Côte de compétition","Fumoir renforcé","Festin de la bande","Grillade géante","Banquet de quartier","Fumoir professionnel","Maître du barbecue","Festival de grillades","Barbecue impérial","Festin légendaire","Fourneau de compétition","Table de 50 personnes","Rôtisserie géante","Fumoir de luxe","Banquet de légende","Grillade mythique","Empire du barbecue","Festival XXL","Banquet des champions","Feu de compétition","Fumoir infernal","Grand festin","Barbecue de légende","Cuisine de maître","Repas des dieux","Le barbecue ultime"],"vigne":["Cuve améliorée","Sélection des grappes","Piquette millésimée","Barrique renforcée","Assemblage premium","Cuvée spéciale","Cave bien remplie","Grand millésime","Sélection du domaine","Cuvée de compétition","Domaine de Paulo","Grande cuvée","Château de la bande","Millésime exceptionnel","Cave secrète","Réserve du patron","Grand cru sélectionné","Cuvée légendaire","Domaine impérial","Nectar exceptionnel","Empire viticole","Caveau monumental","Grand domaine","Millésime mythique","Cuvée des champions","Réserve légendaire","Vignoble de luxe","Grand cru ultime","Nectar des légendes","Le vin des dieux"],"combat":["Bagarre de parking","Retour du videur","Combat de comptoir","Duel de terrasse","Rixe du quartier","Tournoi amateur","Champion du bistrot","Combat de rue","Duel sous pression","Cage improvisée","Champion de la bande","Tournoi régional","Bagarre générale","Combat clandestin","Arène du quartier","Champion des champions","Duel légendaire","Tournoi mythique","Roi de la bagarre","Monstre du ring","Maître du chaos","Arène des costauds","Guerre de quartier","Tournoi de la bande","Duel impossible","Champion mythique","Roi du ring","Légende vivante","Démon de la baston","La bagarre ultime"]};
+
+  Object.keys(end).forEach(function(sk){
+    var e=end[sk];
+    for(var l=21;l<=50;l++){
+      var tier=tiers[l]||'';
+      var name=(masterNames[sk]&&masterNames[sk][l-21]) || (e.name+' '+(tier?tier+' ':'')+'— niveau '+l);name=String(name||e.name+' — niveau '+l);
+      var sec=Math.round(72+(l-21)*2.65);
+      var xp=Math.round(45+(l-21)*1.8);
+      var q=Math.max(2,Math.ceil((l-18)/3));
+      var inn={};
+      if(sk==='combat'){
+        inn[e.item]=Math.max(2,Math.ceil((l-18)/4));
+        if(l>=30)inn[e.item2]=Math.max(1,Math.ceil((l-28)/5));
+        var gold=Math.round(155+(l-21)*8.5);
+        A.push({id:e.prefix+'_master_'+l,sk:sk,nom:name,lvl:l,sec:sec,xp:xp,inn:inn,out:{or:gold}});
+      }else{
+        inn[e.item]=q;
+        if(l>=30)inn[e.item2]=Math.max(1,Math.ceil((l-28)/6));
+        var out=Math.max(2,Math.floor(q*0.72));
+        A.push({id:e.prefix+'_master_'+l,sk:sk,nom:name,lvl:l,sec:sec,xp:xp,inn:inn,out:(function(){var o={};o[e.out]=out;return o;})()});
+      }
+    }
+  });
+})();
+var AM={};A.forEach(function(a){AM[a.id]=a;});
+var Q=[
+['Nanard','« Il me faut 30 palettes ou je pleure. »',{palette:30},60],
+['Riton','« J\'ai tout cramé. 10 saucisses, vite. »',{saucisse:10},90],
+['Poumes','« 40 canettes pour mon composteur sacré. »',{canette:40},70],
+['Stalek','« 8 goujons. Juste pour dire que j\'ai pêché. »',{goujon:8},60],
+['Paulo','« 5 piquettes. Et range ta gueule. »',{piquette:5},120],
+['Coco','« 6 brochets BBQ et j\'essaie de venir. »',{bbq:6},180],
+['Nanard','« Une vraie charpente : 10 poutres. Sérieux cette fois. »',{poutre:10},400],
+['La bande','« Soirée légendaire : 3 crus + 5 fumés. »',{cru:3,fume:5},1500],
+['Coco','« 12 piquettes pour l\'apéro. Je gère la famille après. »',{piquette:12},300]
+];
+/* Ennemis humour par activité : nom, pv, atk, def, xp, gold, texte */
+var ENEMIES={
+  bois:[
+    {nom:'Planche tordue de Nanard',pv:20,atk:4,def:2,xp:6,gold:4,msg:'Elle refuse de rester droite.'},
+    {nom:'Marteau vengeur',pv:28,atk:6,def:1,xp:8,gold:5,msg:'Il te doit une baffe pour tous ces pouces.'},
+    {nom:'Cabane qui penche',pv:40,atk:5,def:5,xp:12,gold:8,msg:'Nanard : « Ça va tenir. »'}
+  ],
+  mine:[
+    {nom:'Canette anxieuse',pv:18,atk:3,def:1,xp:5,gold:3,msg:'Poumes veut la trier. Elle refuse.'},
+    {nom:'Composteur sacré',pv:32,atk:5,def:4,xp:10,gold:6,msg:'Il exige 40 canettes. Maintenant.'},
+    {nom:'Poubelle agressive',pv:45,atk:7,def:3,xp:14,gold:9,msg:'Ça sent le lundi matin.'}
+  ],
+  forge:[
+    {nom:'Vis qui refuse',pv:22,atk:4,def:3,xp:7,gold:5,msg:'Coco devait la serrer. Il gère la famille.'},
+    {nom:'Clé de 12 disparue',pv:30,atk:6,def:2,xp:11,gold:7,msg:'Tu la cherches depuis 2019.'},
+    {nom:'Établi hanté',pv:50,atk:8,def:6,xp:16,gold:12,msg:'Il a mangé 3 tournevis.'}
+  ],
+  peche:[
+    {nom:'Goujon moqueur',pv:16,atk:3,def:1,xp:5,gold:3,msg:'Stalek : « J\'aime pas ça. » Le goujon non plus.'},
+    {nom:'Botte de l\'étang',pv:25,atk:5,def:4,xp:9,gold:4,msg:'Stalek la montre quand même.'},
+    {nom:'Silure du silence',pv:55,atk:9,def:5,xp:18,gold:14,msg:'Il ne parle pas. Il juge.'}
+  ],
+  cuisine:[
+    {nom:'Saucisse cramée',pv:20,atk:5,def:1,xp:6,gold:4,msg:'Riton : « C\'est fumé. »'},
+    {nom:'Extincteur vide',pv:28,atk:4,def:3,xp:9,gold:5,msg:'Encore une fois.'},
+    {nom:'Barbecue enragé',pv:48,atk:10,def:4,xp:15,gold:11,msg:'Il a déclaré la guerre à Riton.'}
+  ],
+  vigne:[
+    {nom:'Piquette rancunière',pv:24,atk:4,def:2,xp:7,gold:5,msg:'Paulo interdit ce mot. Elle l\'a entendu.'},
+    {nom:'Raisin aigre',pv:18,atk:3,def:1,xp:5,gold:3,msg:'2/10 selon Paulo.'},
+    {nom:'Grand cru snob',pv:52,atk:8,def:7,xp:17,gold:15,msg:'Il te trouve ordinaire.'}
+  ],
+  combat:[
+    {nom:'Le voisin qui râle',pv:30,atk:7,def:3,xp:10,gold:8,msg:'Encore le bruit à 7h.'},
+    {nom:'Videur du bar',pv:40,atk:9,def:4,xp:14,gold:12,msg:'T\'as pas ta place.'},
+    {nom:'Costaud du camping',pv:70,atk:12,def:8,xp:22,gold:20,msg:'Il a mangé le silure fumé.'},
+    {nom:'Paulo après 3 piquettes',pv:45,atk:11,def:5,xp:16,gold:10,msg:'« T\'es moche. » Et il frappe.'}
+  ]
+};
+/* Boss bande — ultra rares, versions bourrées */
+var BOSS_DEFS=[
+  {id:'nanard_bourre',nom:'Nanard Bourré',pv:8000,atk:55,def:35,msg:'Il construit une cabane… sur ta tête. Avec un pastis à la main.'},
+  {id:'poumes_bourre',nom:'Poumes Bourré',pv:7500,atk:50,def:40,msg:'Il trie tes os par couleur. Compostesse mode dieu.'},
+  {id:'stalek_bourre',nom:'Stalek Bourré',pv:9000,atk:60,def:30,msg:'« J\'aime pas la pêche. » Il t\'attrape quand même.'},
+  {id:'riton_bourre',nom:'Riton Bourré',pv:7800,atk:65,def:28,msg:'Le barbecue c\'est toi. Les extincteurs sont vides.'},
+  {id:'paulo_bourre',nom:'Paulo Bourré',pv:8500,atk:58,def:38,msg:'Il te note 0/10. Puis il te verse de la piquette dans les yeux.'},
+  {id:'coco_bourre',nom:'Coco Bourré',pv:9500,atk:70,def:45,msg:'Il gère plus la famille. Il gère ton destin. Depuis le canapé.'}
+];
+var bossLive=null; /* copie locale du doc Firestore */
+function fresh(){
+  var o={act:null,prog:0,t:Date.now(),xp:{},tool:{},inv:{or:0},drops:{},eq:{batte:0,treillis:0},equipped:{},stars:0,done:{},n:0,buff:0,buffM:1,dayKey:'',dayN:0,pseudo:'',pseudoSet:0,sdone:{},give:{},hp:50,hpMax:50,lootLog:[],ticketPct:0,ticketUntil:0,teamWith:null,teamName:null,xpBuffPct:0,xpBuffUntil:0,orNerfPct:0,orNerfUntil:0};
+  SK.forEach(function(s){o.xp[s[0]]=0;o.tool[s[0]]=0;});
+  return o;
+}
+function logLoot(id,src){
+  if(!st.lootLog)st.lootLog=[];
+  var nom=DROP[id]?DROP[id].nom:(IT[id]?IT[id][0]:id);
+  var rare=DROP[id]?DROP[id].rare:'common';
+  st.lootLog.unshift({id:id,nom:nom,rare:rare,src:src||'',t:Date.now()});
+  if(st.lootLog.length>80)st.lootLog=st.lootLog.slice(0,80);
+}
+function load(){try{var r=localStorage.getItem(KEY);if(r){var d=JSON.parse(r),f=fresh();for(var k in f)if(d[k]!==undefined)f[k]=d[k];return f;}}catch(e){}return fresh();}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}}
+var st=load();
+var cocoEnd=Math.random()<0.4?Date.now()+600000:0;
+var PO=['Woness','Gouness','Poumness','Compostesse','Recyclesse','Triness'],po=PO[Math.floor(Math.random()*PO.length)];
+function xpForLevel(l){/* Courbe longue jusqu'au niveau 50. */if(l<=1)return 0;var n=l-1;return 120*n*n+40*n;}
+function lvl(sk){var xp=Math.max(0,st.xp[sk]||0),l=1;while(l<50&&xp>=xpForLevel(l+1))l++;return l;}
+function tierForLevel(l){if(l>=50)return'Divin';if(l>=45)return'Mythique';if(l>=40)return'Légende';if(l>=35)return'Élite';if(l>=30)return'Grand maître';if(l>=25)return'Maître';if(l>=21)return'Expert';return'Apprenti';}
+function inv(k){return st.inv[k]||0;}
+function dropQty(k){return st.drops[k]||0;}
+function fmt(n){return Math.floor(n).toLocaleString('fr-FR');}
+function has(o){for(var k in o)if(inv(k)<o[k])return false;return true;}
+function txt(o){if(!o||typeof o!=='object')return '';var r=[];for(var k in o){var name=IT[k]?IT[k][0]:(DROP[k]?DROP[k].nom:k);name=name||k||'objet';var q=Number(o[k])||0;if(q>0)r.push(q+' '+String(name).toLowerCase());}return r.join(', ');}
+function sum(){var s=0;SK.forEach(function(k){s+=lvl(k[0]);});return s;}
+function dn(){var k=new Date().toISOString().slice(0,10);if(st.dayKey!==k){st.dayKey=k;st.dayN=0;}st.dayN++;}
+function equipBonus(type){var b=0;for(var slot in st.equipped){var id=st.equipped[slot];if(id&&DROP[id]&&DROP[id].bonus&&DROP[id].bonus[type])b+=DROP[id].bonus[type];}return b;}
+function sp(sk){var base=(1+0.04*(lvl(sk)-1))*(1+0.25*st.tool[sk]);if(Date.now()<st.buff)base*=st.buffM;base*=(1+equipBonus('sp'));return base;}
+function xpMult(sk){
+  var m=1+0.1*st.stars;
+  if(sk==='combat'){m*=(1+0.3*st.eq.treillis);if(Date.now()<cocoEnd)m*=1.3;}
+  m*=(1+equipBonus('xp'));
+  if(st.xpBuffUntil&&Date.now()<st.xpBuffUntil)m*=(1+(st.xpBuffPct||0)/100);
+  return m;
+}
+function orMult(){
+  var m=1+0.3*st.eq.batte+equipBonus('or');
+  if(st.orNerfUntil&&Date.now()<st.orNerfUntil)m*=(1-(st.orNerfPct||0)/100);
+  return m;
+}
+function playerAtk(){return 5+Math.floor(sum()*0.4)+Math.floor(equipBonus('atk'))+Math.floor(st.eq.batte*3);}
+function playerDef(){return 2+Math.floor(sum()*0.25)+Math.floor(equipBonus('def'))+Math.floor(st.eq.treillis*2);}
+function playerHpMax(){return 40+sum()*4+Math.floor(equipBonus('def')*2);}
+function syncHp(){st.hpMax=playerHpMax();if(st.hp==null||st.hp>st.hpMax)st.hp=st.hpMax;if(st.hp<0)st.hp=0;}
+function dmgCalc(atk,def){return Math.max(1,Math.floor(atk-def*0.5+Math.random()*3));}
+var combatState=null; /* {enemy, eHp, log} */
+function tryEncounter(sk){
+  if(combatState)return;
+  if(Math.random()>0.14)return; /* ~14% par action — un peu plus de pression */
+  var list=ENEMIES[sk];if(!list||!list.length)return;
+  var en=list[Math.floor(Math.random()*list.length)];
+  /* scale un peu avec niveau */
+  var scale=1+lvl(sk)*0.11;
+  combatState={
+    enemy:{nom:en.nom,pv:Math.floor(en.pv*scale),atk:Math.floor(en.atk*scale),def:Math.floor(en.def*scale),xp:Math.floor(en.xp*scale),gold:Math.floor(en.gold*scale),msg:en.msg},
+    eHp:Math.floor(en.pv*scale),
+    log:en.msg
+  };
+  openCombat();
+}
+function openCombat(){
+  if(!combatState)return;
+  syncHp();
+  var e=combatState.enemy;
+  document.getElementById('mgTitle').textContent='⚔️ '+e.nom;
+  document.getElementById('mgSub').textContent=e.msg;
+  document.getElementById('mgAction').textContent='Attaquer';
+  document.getElementById('mgAction').onclick=combatAttack;
+  document.getElementById('mgCancel').textContent='Fuir';
+  document.getElementById('mgCancel').onclick=combatFlee;
+  renderCombat();
+  document.getElementById('mg').classList.add('show');
+}
+function renderCombat(){
+  if(!combatState)return;
+  var e=combatState.enemy;
+  var pctE=Math.max(0,combatState.eHp/e.pv*100);
+  var pctP=Math.max(0,st.hp/st.hpMax*100);
+  document.getElementById('mgArea').innerHTML=
+    '<div class="mg-score">'+e.nom+'</div>'+
+    '<div class="lvl-bar"><i style="width:'+pctE+'%;background:#c45c5c"></i></div>'+
+    '<div style="font-size:.8rem;color:var(--mute);margin:4px 0 12px">PV '+Math.max(0,Math.floor(combatState.eHp))+' / '+e.pv+' · ATK '+e.atk+' · DEF '+e.def+'</div>'+
+    '<div class="mg-score">Toi</div>'+
+    '<div class="lvl-bar"><i style="width:'+pctP+'%"></i></div>'+
+    '<div style="font-size:.8rem;color:var(--mute);margin:4px 0 8px">PV '+Math.floor(st.hp)+' / '+st.hpMax+' · ATK '+playerAtk()+' · DEF '+playerDef()+'</div>'+
+    '<div class="mg-score" style="font-size:.85rem;font-weight:400">'+combatState.log+'</div>';
+}
+function combatAttack(){
+  if(!combatState)return;
+  var e=combatState.enemy;
+  var dmg=dmgCalc(playerAtk(),e.def);
+  combatState.eHp-=dmg;
+  combatState.log='Tu infliges '+dmg+' dégâts.';
+  if(combatState.eHp<=0){combatWin();return;}
+  var edmg=dmgCalc(e.atk,playerDef());
+  st.hp-=edmg;
+  combatState.log+=' '+e.nom+' te met '+edmg+'.';
+  if(st.hp<=0){st.hp=0;combatLose();return;}
+  renderCombat();save();
+}
+function combatWin(){
+  var e=combatState.enemy;
+  st.xp[cur]=(st.xp[cur]||0)+e.xp;
+  st.inv.or=inv('or')+e.gold;
+  if(Math.random()<0.2){var eq=rollEqDrop();if(eq){st.drops[eq]=dropQty(eq)+1;logLoot(eq,'combat');}}
+  toast('Victoire contre '+e.nom+' ! +'+e.xp+' xp · +'+e.gold+' €');
+  combatState=null;
+  document.getElementById('mgCancel').textContent='Fermer';
+  document.getElementById('mgCancel').onclick=mgClose;
+  mgClose();save();render();
+  if(typeof pushAct==='function')pushAct(st.pseudo||'Quelqu\'un','a tabassé '+e.nom);
+}
+function combatLose(){
+  var e=combatState.enemy;
+  st.act=null;st.prog=0;
+  var loss=Math.min(inv('or'),Math.floor(5+Math.random()*10));
+  st.inv.or=inv('or')-loss;
+  toast(e.nom+' t\'a eu. -'+loss+' € · Tu te traines jusqu\'au canapé de Coco.');
+  st.hp=Math.max(1,Math.floor(st.hpMax*0.3));
+  combatState=null;
+  document.getElementById('mgCancel').textContent='Fermer';
+  document.getElementById('mgCancel').onclick=mgClose;
+  mgClose();save();render();
+}
+function combatFlee(){
+  if(!combatState)return;
+  if(Math.random()<0.55){
+    toast('Tu as fuis. Stalek te juge en silence.');
+    combatState=null;
+    document.getElementById('mgCancel').textContent='Fermer';
+    document.getElementById('mgCancel').onclick=mgClose;
+    mgClose();
+  }else{
+    var e=combatState.enemy;
+    var edmg=dmgCalc(e.atk,playerDef());
+    st.hp-=edmg;
+    combatState.log='Fuite ratée ! '+e.nom+' : '+edmg+' dégâts.';
+    if(st.hp<=0){st.hp=0;combatLose();return;}
+    renderCombat();save();
+  }
+}
+function pickWeighted(table){
+  var total=0;for(var k in table)total+=table[k];
+  if(total<=0)return null;
+  var r=Math.random()*total;
+  for(var k in table){r-=table[k];if(r<=0)return k;}
+  return null;
+}
+function lootLevelFactor(sk){
+  return Math.max(0,Math.min(49,(lvl(sk)||1)-1));
+}
+function rollMatDrop(sk){
+  var table=DROP_TABLE[sk];if(!table)return null;
+  var n=lootLevelFactor(sk);
+  /* Le loot de matériaux devient plus fréquent avec le niveau : 18% -> 30%. */
+  var chance=0.18+0.00245*n;
+  if(Math.random()>chance)return null;
+  return pickWeighted(table);
+}
+function rollMatQty(sk){
+  var n=lootLevelFactor(sk);
+  /* À haut niveau, un drop de matériaux peut donner 2 puis 3 unités. */
+  var extra=0;
+  if(n>=24&&Math.random()<0.22)extra++;
+  if(n>=39&&Math.random()<0.18)extra++;
+  return 1+extra;
+}
+function rollEqDrop(){
+  /* Plus le niveau monte, plus l'équipement devient fréquent ET les raretés hautes deviennent accessibles. */
+  var activeLvl=st.act&&AM[st.act]?lvl(AM[st.act].sk):1;
+  var n=lootLevelFactor(activeLvl);
+  var order=['mythic','extralegendary','legendary','epic','rare','uncommon','common'];
+  for(var i=0;i<order.length;i++){
+    var rare=order[i];
+    /* Les raretés élevées progressent plus vite : le loot de fin de jeu est nettement meilleur. */
+    var qualityBoost=1+(n/49)*(1+(i<4?0.85:0.35));
+    if(Math.random()<EQ_RATES[rare]*qualityBoost){
+      var pool=EQ_BY_RARE[rare];
+      if(pool&&pool.length)return pool[Math.floor(Math.random()*pool.length)];
+    }
+  }
+  return null;
+}
+function rollChestDrop(){
+  var activeLvl=st.act&&AM[st.act]?lvl(AM[st.act].sk):1;
+  var n=lootLevelFactor(activeLvl);
+  var order=['coffre_legende','coffre_cristal','coffre_or','coffre_fer','coffre_bois'];
+  for(var i=0;i<order.length;i++){
+    var id=order[i];
+    /* Les coffres deviennent jusqu'à ~2,5x plus accessibles au niveau 50. */
+    var boost=1+(n/49)*1.5;
+    /* Bonus supplémentaire aux coffres prestigieux en fin de progression. */
+    if(i<2)boost*=1+(n/49)*0.35;
+    if(Math.random()<CHEST_RATES[id]*boost)return id;
+  }
+  return null;
+}
+function openChest(chestId){
+  if(dropQty(chestId)<1||!CHEST_LOOT[chestId])return;
+  st.drops[chestId]=dropQty(chestId)-1;
+  var loot=CHEST_LOOT[chestId];
+  /* 2 à 4 objets */
+  var n=2+Math.floor(Math.random()*3);
+  var got=[];
+  for(var i=0;i<n;i++){
+    var item=pickWeighted(loot);
+    if(!item)continue;
+    st.drops[item]=dropQty(item)+1;
+    logLoot(item,'coffre');
+    var name=DROP[item]?DROP[item].nom:item;
+    got.push(name);
+  }
+  /* petit bonus € selon rareté du coffre */
+  var goldBonus={coffre_bois:5,coffre_fer:20,coffre_or:80,coffre_cristal:250,coffre_legende:800}[chestId]||0;
+  if(goldBonus){st.inv.or=inv('or')+goldBonus;got.push(goldBonus+' €');}
+  toast('📦 '+DROP[chestId].nom+' : '+got.join(', ')+' !',true);
+  save();render();
+}
+function readNote(noteId){
+  if(dropQty(noteId)<1||!DROP[noteId]||DROP[noteId].cat!=='note')return;
+  st.drops[noteId]=dropQty(noteId)-1;
+  var joke=JOKES[Math.floor(Math.random()*JOKES.length)];
+
+  var modal=document.getElementById('letterModal');
+  var title=document.getElementById('letterTitle');
+  var message=document.getElementById('letterMessage');
+  if(title)title.textContent='📝 '+DROP[noteId].nom;
+  if(message)message.textContent=joke;
+  if(modal)modal.classList.add('show');
+
+  save();
+  render();
+}
+function closeLetterModal(){
+  var modal=document.getElementById('letterModal');
+  if(modal)modal.classList.remove('show');
+}
+document.getElementById('letterClose').onclick=closeLetterModal;
+document.getElementById('letterOk').onclick=closeLetterModal;
+document.getElementById('letterModal').addEventListener('click',function(e){
+  if(e.target===this)closeLetterModal();
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    closeLetterModal();
+    closeIncomingItem();
+  }
+});
+function advance(sec){
+  while(sec>0&&st.act){
+    var a=AM[st.act],d=a.sec/sp(a.sk),need=d-st.prog;
+    if(sec<need){st.prog+=sec;return;}
+    sec-=need;st.prog=0;
+    if(!has(a.inn)){st.act=null;st.msg='T\'as pas ce qu\'il faut, boloss : '+txt(a.inn);return;}
+    for(var k in a.inn)st.inv[k]=inv(k)-a.inn[k];
+    for(var k in a.out){var qty=a.out[k];if(k==='or')qty=Math.floor(qty*orMult());st.inv[k]=inv(k)+qty;}
+    st.xp[a.sk]+=a.xp*xpMult(a.sk);st.n++;dn();
+    /* Drops : matériau, équipement, coffre */
+    var matId=rollMatDrop(a.sk);
+    if(matId){
+      var matQty=rollMatQty(a.sk);
+      st.drops[matId]=dropQty(matId)+matQty;
+      st.lastDrop=matId;
+      logLoot(matId,'action');
+      if(matQty>1)st.msg='🎁 Loot amélioré : x'+matQty+' '+(DROP[matId]?DROP[matId].nom:matId);
+    }
+    var eqId=rollEqDrop();
+    if(eqId){st.drops[eqId]=dropQty(eqId)+1;st.lastDrop=eqId;logLoot(eqId,'action');}
+    var chestId=rollChestDrop();
+    if(chestId){st.drops[chestId]=dropQty(chestId)+1;st.lastDrop=chestId;logLoot(chestId,'action');}
+    /* Rencontre ennemie aléatoire */
+    tryEncounter(a.sk);
+    /* Boss ultra rare (Firebase) */
+    if(typeof window.tryBossSpawn==='function')window.tryBossSpawn();
+    tryUniqueDropLocal();
+    /* Malus pendant boss */
+    if(bossLive&&bossLive.active&&bossLive.hp>0&&!bossLive.dead&&Math.random()<0.18){
+      var mPool=['malus_poumes','malus_poumes','malus_cabane','malus_saucisse','malus_piquette','malus_verre','malus_silure','malus_canape'];
+      var mid=mPool[Math.floor(Math.random()*mPool.length)];
+      st.drops[mid]=dropQty(mid)+1;st.lastDrop=mid;logLoot(mid,'boss');
+    }
+    /* Social : duel / bière */
+    if(Math.random()<0.015){
+      var socialPool=['duel_msg','beer_msg','paye_coup'];
+      var sid=socialPool[Math.floor(Math.random()*socialPool.length)];
+      st.drops[sid]=dropQty(sid)+1;st.lastDrop=sid;logLoot(sid,'action');
+    }
+    /* Deathnote : très rare */
+    if(Math.random()<0.0004){
+      st.drops.deathnote=dropQty('deathnote')+1;st.lastDrop='deathnote';logLoot('deathnote','action');
+    }
+    /* Items rare / debuff */
+    if(Math.random()<0.007){
+      var pool=['item_branlette','item_branlette','item_pipe','item_baise','item_pute','item_momole'];
+      var iid=pool[Math.floor(Math.random()*pool.length)];
+      if(iid==='item_momole'){
+        var sk=a.sk;
+        st.xp[sk]=Math.max(0,(st.xp[sk]||0)-25);
+        logLoot(iid,'action');
+        st.lastDrop=iid;
+        st.msg='💀 Momole ! -25 XP en '+((SK.filter(function(s){return s[0]===sk;})[0]||[])[1]||sk);
+      }else{
+        st.drops[iid]=dropQty(iid)+1;st.lastDrop=iid;logLoot(iid,'action');
+      }
+    }
+    /* Soins PV (assez rare) */
+    if(Math.random()<0.015){
+      var hPool=[
+        'heal_eau','heal_pain','heal_chips','heal_glace','heal_olive','heal_fromage','heal_cafe','heal_sandwich',
+        'heal_binouze','heal_pastis','heal_piquette','heal_saucisse','heal_soupe','heal_nutella','heal_redbull','heal_bouillon',
+        'heal_grillade','heal_pizza','heal_kebab','heal_silure','heal_tiramisu','heal_doliprane','heal_raclette',
+        'heal_apero'
+      ];
+      /* apéro plus rare */
+      var hid=Math.random()<0.08?'heal_apero':hPool[Math.floor(Math.random()*(hPool.length-1))];
+      st.drops[hid]=dropQty(hid)+1;st.lastDrop=hid;logLoot(hid,'action');
+    }
+  }
+}
+function applyHeal(amount){
+  syncHp();
+  var before=st.hp;
+  st.hp=Math.min(st.hpMax,st.hp+amount);
+  return Math.floor(st.hp-before);
+}
+function fairAtk(){return 15+Math.floor(equipBonus('atk'));}
+function fairDef(){return 8+Math.floor(equipBonus('def'));}
+function ticketPct(){
+  if(st.ticketUntil&&Date.now()<st.ticketUntil)return st.ticketPct||0;
+  return 0;
+}
+function clearBossMalus(){
+  for(var k in DROP){if(DROP[k].cat==='malus')st.drops[k]=0;}
+  st.debuff=null;
+  save();
+}
+/* ===== MARCHÉ ===== */
+var RARE_PRICE={common:12,uncommon:35,rare:90,epic:280,legendary:700,extralegendary:1800,mythic:5000};
+var UNIQUE_IDS=['q_nanard','q_riton','q_poumes','q_stalek','q_paulo','q_coco'];
+var uniqueReg={}; /* id → {owner, ownerName, destroyed} */
+function itemName(id){return IT[id]?IT[id][0]:(DROP[id]?DROP[id].nom:id);}
+function sellPrice(id){
+  if(DROP[id]&&DROP[id].unique)return 0; /* pas vendable PNJ */
+  if(IT[id])return IT[id][1]||1;
+  if(DROP[id]){
+    if(DROP[id].val!=null)return DROP[id].val;
+    if(DROP[id].cat==='chest')return RARE_PRICE[DROP[id].rare]||50;
+    if(DROP[id].cat==='note')return DROP[id].rare==='rare'?8:3;
+    if(DROP[id].cat==='malus')return 5;
+    return RARE_PRICE[DROP[id].rare]||20;
+  }
+  return 1;
+}
+function isUniqueOwned(id){return uniqueReg[id]&&(uniqueReg[id].owner||uniqueReg[id].destroyed);}
+function tryUniqueDropLocal(){
+  if(typeof window.tryUniqueDrop==='function')window.tryUniqueDrop();
+}
+function buyPrice(id){
+  var p=Math.max(1,Math.ceil(sellPrice(id)*2.5));
+  var t=ticketPct();
+  if(t>0)p=Math.max(1,Math.ceil(p*(1-t/100)));
+  return p;
+}
+function ownedQty(id){
+  if(IT[id])return inv(id);
+  return dropQty(id);
+}
+function addItem(id,q){
+  q=q||1;
+  if(IT[id]){st.inv[id]=inv(id)+q;}
+  else{st.drops[id]=dropQty(id)+q;logLoot(id,'marché');}
+}
+function removeItem(id,q){
+  q=q||1;
+  if(IT[id]){st.inv[id]=Math.max(0,inv(id)-q);}
+  else{st.drops[id]=Math.max(0,dropQty(id)-q);}
+}
+function renderMarket(){
+  /* Acheter PNJ : tous IT + eq common/uncommon + consos drop */
+  var buyH='',list=[];
+  for(var k in IT){if(k==='or')continue;list.push(k);}
+  for(var k in DROP){
+    if(DROP[k].cat==='eq'&&(DROP[k].rare==='common'||DROP[k].rare==='uncommon'))list.push(k);
+    if(DROP[k].cat==='conso')list.push(k);
+  }
+  var tix=ticketPct();
+  list.forEach(function(k){
+    var p=buyPrice(k);
+    buyH+='<div class="card row"><div class="info"><b>'+itemName(k)+'</b><small>'+p+' € pièce'+(tix?' · ticket -'+tix+'%':'')+'</small></div><button class="btn" data-mbuy="'+k+'">Acheter</button></div>';
+  });
+  document.getElementById('marketBuy').innerHTML=buyH||'<div class="empty">Vide</div>';
+
+  /* Vendre : tout ce qu'on possède */
+  var sellH='',has=false;
+  for(var k in IT){
+    if(k==='or')continue;var q=inv(k);if(q<1)continue;has=true;
+    sellH+='<div class="card row"><div class="info"><b>'+IT[k][0]+'</b><small>×'+fmt(q)+' · '+sellPrice(k)+' € pièce</small></div>'+
+      '<button class="btn" data-msell="'+k+'" data-kind="it">Vendre 1</button> <button class="btn" data-msellall="'+k+'" data-kind="it">Tout</button></div>';
+  }
+  for(var k in DROP){
+    if(DROP[k].cat==='malus'||DROP[k].unique)continue;
+    var q=dropQty(k);if(q<1)continue;has=true;
+    sellH+='<div class="card row"><div class="info"><b class="rarity-'+(DROP[k].rare||'common')+'">'+DROP[k].nom+'</b><small>×'+q+' · '+sellPrice(k)+' € pièce</small></div>'+
+      '<button class="btn" data-msell="'+k+'" data-kind="drop">Vendre 1</button> <button class="btn" data-msellall="'+k+'" data-kind="drop">Tout</button></div>';
+  }
+  document.getElementById('marketSell').innerHTML=has?sellH:'<div class="empty">Rien à vendre, fauché.</div>';
+
+  /* Select pour mise en vente potes */
+  var opts=[];
+  for(var k in IT){if(k!=='or'&&inv(k)>=1)opts.push([k,IT[k][0]+' (×'+inv(k)+')']);}
+  for(var k in DROP){if(DROP[k].cat==='malus')continue;if(dropQty(k)>=1)opts.push([k,DROP[k].nom+' (×'+dropQty(k)+')']);}
+  var sel=document.getElementById('mItem');
+  if(sel){
+    var cur=sel.value;
+    sel.innerHTML=opts.map(function(o){return '<option value="'+o[0]+'">'+o[1]+'</option>';}).join('')||'<option value="">—</option>';
+    if(opts.some(function(o){return o[0]===cur;}))sel.value=cur;
+  }
+  if(typeof window.renderPeerMarket==='function')window.renderPeerMarket();
+}
+function ecost(k){var n=st.eq[k];return{l:['alu','acier','titane'][n],q:(k==='batte'?[6,8,10]:[8,10,12])[n],g:[50,200,800][n]};}
+function tcost(sk){return 40*Math.pow(3,st.tool[sk]);}
+function gain(){return Math.max(0,Math.floor(sum()/14)-2);}
+
+var h='';SK.forEach(function(s){h+='<button data-sk="'+s[0]+'" id="pl-'+s[0]+'">'+s[2]+' '+s[1]+'</button>';});
+document.getElementById('pills').innerHTML=h;
+h='';A.forEach(function(a){h+='<div class="card row" id="a-'+a.id+'"><div class="info"><b>'+a.nom+'</b><small id="ad-'+a.id+'"></small></div><button class="btn" data-act="'+a.id+'" id="g-'+a.id+'"></button></div>';});
+document.getElementById('acts').innerHTML=h;
+h='';SK.forEach(function(s){h+='<div class="card row"><div class="info"><b>'+s[2]+' '+s[1]+'</b><small id="t-'+s[0]+'"></small></div><button class="btn" data-up="'+s[0]+'" id="u-'+s[0]+'"></button></div>';});
+document.getElementById('tools').innerHTML=h;
+h='';[['batte','Batte','+30% € bagarre'],['treillis','Treillis','+30% xp bagarre']].forEach(function(e){h+='<div class="card row"><div class="info"><b>'+e[1]+'</b><small id="e-'+e[0]+'">'+e[2]+'</small></div><button class="btn" data-eq="'+e[0]+'" id="eb-'+e[0]+'">Fabriquer</button></div>';});
+document.getElementById('eqCraft').innerHTML=h;
+var DR=[
+['pastis','Pastis de Coco','+25% vitesse · 5 min',1.25,300000,{or:15}],
+['piquette','Piquette de Paulo','+20% vitesse · 5 min',1.2,300000,{piquette:1}],
+['cru','Grand cru (vraiment)','+40% vitesse · 10 min',1.4,600000,{cru:1}]
+];
+h='';DR.forEach(function(b){h+='<div class="card row"><div class="info"><b>'+b[1]+'</b><small>'+b[2]+'</small></div><button class="btn" data-drink="'+b[0]+'" id="d-'+b[0]+'">Trinquer</button></div>';});
+document.getElementById('bar').innerHTML=h;
+h='';Q.forEach(function(q,i){var who=q[0]==='Poumes'?'Poumes ('+po+')':q[0];h+='<div class="card row"><div class="info"><b>'+who+'</b><small>'+q[1]+' → '+q[3]+' €</small></div><button class="btn" data-q="'+i+'" id="q'+i+'"></button></div>';});
+document.getElementById('goals').innerHTML=h;
+
+function renderBag(){
+  /* Matériaux = uniquement les matériaux de craft (comme avant) + junk drop vendable */
+  var matH='',hasMat=false;
+  for(var k in IT){
+    if(k==='or'||IT[k][2]!=='mat')continue;
+    var q=inv(k);if(q<1)continue;hasMat=true;
+    matH+='<div class="card row"><div class="info"><b>'+IT[k][0]+'</b><small>'+fmt(q)+' · '+IT[k][1]+' € pièce</small></div><button class="btn" data-sell="'+k+'">Vendre</button></div>';
+  }
+  for(var k in DROP){
+    if(DROP[k].cat!=='mat'||dropQty(k)<1)continue;hasMat=true;
+    var prix=DROP[k].val||1;
+    matH+='<div class="card row"><div class="info"><b class="rarity-'+DROP[k].rare+'">'+DROP[k].nom+'</b><small>×'+dropQty(k)+' · '+prix+' € pièce</small></div><button class="btn" data-selldrop="'+k+'">Vendre</button></div>';
+  }
+  document.getElementById('bag-mat').innerHTML=hasMat?matH:'<div class="empty">Vide. Comme les ambitions de Stalek en pêche.</div>';
+
+  var eqH='',hasEq=false;
+  for(var k in DROP){if(DROP[k].cat!=='eq'||DROP[k].unique||dropQty(k)<1)continue;hasEq=true;
+    var equipped=false;for(var s in st.equipped)if(st.equipped[s]===k)equipped=true;
+    var bns=DROP[k].bonus||{};
+    var stats=[];if(bns.atk)stats.push('ATK +'+bns.atk);if(bns.def)stats.push('DEF +'+bns.def);
+    eqH+='<div class="card row"><div class="info"><b class="rarity-'+DROP[k].rare+'">'+DROP[k].nom+'</b><small>'+(DROP[k].slot||'')+(stats.length?' · '+stats.join(' · '):'')+(equipped?' · équipé':'')+'</small></div><button class="btn'+(equipped?' primary':'')+'" data-wear="'+k+'">'+(equipped?'Retirer':'Équiper')+'</button></div>';}
+  document.getElementById('bag-eq').innerHTML=hasEq?eqH:'<div class="empty">Rien. T\'es à poil comme Riton sans barbecue.</div>';
+
+  var coH='',hasCo=false;
+  /* Social (duel, bière, pipe) */
+  for(var k in DROP){if(DROP[k].cat!=='social'||dropQty(k)<1)continue;hasCo=true;
+    var hint=k==='item_pipe'?'+15% XP toi + cible · 10 min':(k==='duel_msg'?'duel forcé':(k==='paye_coup'?'-100 € à la cible':(k==='deathnote'?'vide les PV de la cible · Très rare':'équipe')));
+    var label=DROP[k].rarityLabel||'';
+    coH+='<div class="card row"><div class="info"><b class="rarity-'+DROP[k].rare+'">💬 '+DROP[k].nom+'</b><small>×'+dropQty(k)+' · '+hint+(label?' · '+label:'')+'</small></div><button class="btn primary" data-social="'+k+'">Envoyer</button></div>';}
+  /* Soins */
+  for(var k in DROP){if(DROP[k].cat!=='heal'||dropQty(k)<1)continue;hasCo=true;
+    var hh=DROP[k].healAll?'Toute la bande +'+DROP[k].heal+' PV':'+'+DROP[k].heal+' PV';
+    coH+='<div class="card row"><div class="info"><b class="rarity-'+DROP[k].rare+'">❤️ '+DROP[k].nom+'</b><small>×'+dropQty(k)+' · '+hh+'</small></div><button class="btn" data-heal="'+k+'">'+(DROP[k].healAll?'Trinquer':'Manger')+'</button></div>';}
+  /* Buffs solo */
+  for(var k in DROP){if(DROP[k].cat!=='buff'||dropQty(k)<1)continue;hasCo=true;
+    var bh={item_branlette:'+10% XP · 5 min',item_pute:'+50% XP / -50% € · 10 min',item_baise:'+50% XP · 3 min'}[k]||'Activer';
+    coH+='<div class="card row"><div class="info"><b class="rarity-'+DROP[k].rare+'">🔥 '+DROP[k].nom+'</b><small>×'+dropQty(k)+' · '+bh+'</small></div><button class="btn" data-buff="'+k+'">Activer</button></div>';}
+  if(st.xpBuffUntil&&Date.now()<st.xpBuffUntil){
+    hasCo=true;
+    var ml=Math.ceil((st.xpBuffUntil-Date.now())/60000);
+    coH+='<div class="card row"><div class="info"><b>🔥 Buff XP +'+st.xpBuffPct+'%</b><small>~'+ml+' min restantes'+(st.orNerfUntil&&Date.now()<st.orNerfUntil?' · € -'+st.orNerfPct+'%':'')+'</small></div></div>';
+  }
+  /* Tickets */
+  for(var k in DROP){if(DROP[k].cat!=='ticket'||dropQty(k)<1)continue;hasCo=true;
+    coH+='<div class="card row"><div class="info"><b class="rarity-'+DROP[k].rare+'">🎟️ '+DROP[k].nom+'</b><small>×'+dropQty(k)+' · 5 min à l\'activation</small></div><button class="btn" data-ticket="'+k+'">Activer</button></div>';}
+  if(ticketPct()>0){
+    hasCo=true;
+    var left=Math.ceil((st.ticketUntil-Date.now())/60000);
+    coH+='<div class="card row"><div class="info"><b>🎟️ Réduction active -'+st.ticketPct+'%</b><small>encore ~'+left+' min sur le marché PNJ</small></div></div>';
+  }
+  if(st.teamWith){
+    hasCo=true;
+    coH+='<div class="card row"><div class="info"><b>🍺 Équipe avec '+(st.teamName||'un pote')+'</b><small>Duels en duo possibles</small></div><button class="btn" data-leaveteam="1">Quitter</button></div>';
+  }
+  /* Malus boss */
+  if(bossLive&&bossLive.active){
+    for(var k in DROP){if(DROP[k].cat!=='malus'||dropQty(k)<1)continue;hasCo=true;
+      coH+='<div class="card row"><div class="info"><b class="rarity-'+DROP[k].rare+'">😈 '+DROP[k].nom+'</b><small>×'+dropQty(k)+' · envoie à un pote</small></div><button class="btn" data-malus="'+k+'">Envoyer</button></div>';}
+  }
+  for(var k in DROP){if(DROP[k].cat!=='chest'||dropQty(k)<1)continue;hasCo=true;
+    coH+='<div class="card row"><div class="info"><b class="rarity-'+DROP[k].rare+'">📦 '+DROP[k].nom+'</b><small>×'+dropQty(k)+'</small></div><button class="btn primary" data-open="'+k+'">Ouvrir</button></div>';}
+  for(var k in DROP){if(DROP[k].cat!=='note'||dropQty(k)<1)continue;hasCo=true;
+    coH+='<div class="card row"><div class="info"><b class="rarity-'+DROP[k].rare+'">📝 '+DROP[k].nom+'</b><small>×'+dropQty(k)+'</small></div><button class="btn" data-read="'+k+'">Lire</button></div>';}
+  for(var k in IT){if(IT[k][2]!=='conso')continue;var q=inv(k);if(q<1)continue;hasCo=true;
+    coH+='<div class="card row"><div class="info"><b>'+IT[k][0]+'</b><small>×'+fmt(q)+' · '+IT[k][1]+' € pièce</small></div><button class="btn" data-sell="'+k+'">Vendre</button></div>';}
+  for(var k in DROP){if(DROP[k].cat!=='conso'||dropQty(k)<1)continue;hasCo=true;
+    var prix2=DROP[k].val||1;
+    coH+='<div class="card row"><div class="info"><b class="rarity-'+DROP[k].rare+'">'+DROP[k].nom+'</b><small>×'+dropQty(k)+' · '+prix2+' € pièce</small></div><button class="btn" data-selldrop="'+k+'">Vendre</button></div>';}
+  document.getElementById('bag-conso').innerHTML=hasCo?coH:'<div class="empty">Rien. Même pas une piquette de Paulo.</div>';
+}
+function renderPerso(){
+  document.getElementById('charName').textContent=st.pseudo||'Sans pseudo';
+  document.getElementById('charMeta').textContent='Niv. total '+sum()+(st.stars?' · '+st.stars+' ★':'');
+  syncHp();
+  var html='<div class="stat-box"><div class="val">'+Math.floor(st.hp)+'/'+st.hpMax+'</div><div class="lbl">PV</div></div>';
+  html+='<div class="stat-box"><div class="val">'+playerAtk()+'</div><div class="lbl">Attaque</div></div>';
+  html+='<div class="stat-box"><div class="val">'+playerDef()+'</div><div class="lbl">Défense</div></div>';
+  html+='<div class="stat-box"><div class="val">'+fmt(inv('or'))+'</div><div class="lbl">€</div></div>';
+  document.getElementById('statGrid').innerHTML=html;
+  if(st.equipped.relique&&!st.equipped.bonus){st.equipped.bonus=st.equipped.relique;delete st.equipped.relique;}
+  var slots=['tete','corps','mains','pieds','taille','arme'];
+  var labels={tete:'Tête',corps:'Corps',mains:'Mains',pieds:'Pieds',taille:'Taille',arme:'Arme'};
+  var eqH='';slots.forEach(function(slot){var id=st.equipped[slot];var name=id&&DROP[id]?DROP[id].nom:'—';var rare=id&&DROP[id]?DROP[id].rare:'';
+    eqH+='<div class="card row"><div class="info"><b>'+labels[slot]+'</b><small class="rarity-'+rare+'">'+name+'</small></div></div>';});
+  document.getElementById('equipped').innerHTML=eqH;
+  var skH='';SK.forEach(function(s){var l=lvl(s[0]);skH+='<div class="card row"><div class="info"><b>'+s[2]+' '+s[1]+'</b><small>Niveau '+l+' · '+tierForLevel(l)+' · outil '+st.tool[s[0]]+'</small></div></div>';});
+  document.getElementById('skillsOverview').innerHTML=skH;
+  /* Onglet Quequette */
+  var activeQ=st.equipped.bonus;
+  if(activeQ&&DROP[activeQ]){
+    var b=DROP[activeQ].bonus||{};
+    var bs=[];if(b.atk)bs.push('ATK +'+b.atk);if(b.def)bs.push('DEF +'+b.def);if(b.xp)bs.push('XP +'+Math.round(b.xp*100)+'%');if(b.sp)bs.push('Vit. +'+Math.round(b.sp*100)+'%');if(b.or)bs.push('€ +'+Math.round(b.or*100)+'%');
+    document.getElementById('quequetteActive').innerHTML='<div class="card row"><div class="info"><b class="rarity-mythic">👑 '+DROP[activeQ].nom+'</b><small>Bonus actif · '+bs.join(' · ')+'</small></div><button class="btn" data-wear="'+activeQ+'">Retirer</button></div>';
+  }else{
+    document.getElementById('quequetteActive').innerHTML='<div class="empty">Aucune quequette équipée. C\'est le slot bonus.</div>';
+  }
+  var qList='';
+  UNIQUE_IDS.forEach(function(id){
+    var have=dropQty(id)>=1;
+    var u=uniqueReg[id];
+    var status=have?'Sur toi':(u&&u.destroyed?'Détruite':(u&&u.owner?'Chez '+(u.ownerName||'?'):'Pas encore trouvée'));
+    var b=DROP[id].bonus||{};
+    var bs=[];if(b.atk)bs.push('ATK +'+b.atk);if(b.def)bs.push('DEF +'+b.def);
+    qList+='<div class="card row"><div class="info"><b class="rarity-mythic">'+DROP[id].nom+'</b><small>'+status+(bs.length?' · '+bs.join(' · '):'')+'</small></div>'+
+      (have?'<button class="btn'+(st.equipped.bonus===id?' primary':'')+'" data-wear="'+id+'">'+(st.equipped.bonus===id?'Équipée':'Équiper')+'</button>':'')+'</div>';
+  });
+  document.getElementById('quequetteList').innerHTML=qList;
+  /* Historique loots */
+  var log=st.lootLog||[];
+  if(!log.length){
+    document.getElementById('lootHistory').innerHTML='<div class="empty">Aucun loot pour l\'instant. Va grind, feignant.</div>';
+  }else{
+    var rareLabel={common:'Commun',uncommon:'Inhabituel',rare:'Rare',epic:'Épique',legendary:'Légendaire',extralegendary:'Extra légendaire',mythic:'Mythique'};
+    var srcLabel={action:'Action',combat:'Combat',coffre:'Coffre','mini-jeu':'Mini-jeu'};
+    var lh='';
+    log.forEach(function(e){
+      var when=new Date(e.t);
+      var time=when.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+      var day=when.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit'});
+      lh+='<div class="card row"><div class="info"><b class="rarity-'+(e.rare||'common')+'">'+e.nom+'</b><small>'+(rareLabel[e.rare]||'')+(e.src?' · '+(srcLabel[e.src]||e.src):'')+' · '+day+' '+time+'</small></div></div>';
+    });
+    document.getElementById('lootHistory').innerHTML=lh;
+  }
+}
+function render(){
+  syncHp();
+  document.getElementById('gold').textContent=fmt(inv('or'))+' €'+(st.stars?' · '+st.stars+'★':'');
+  document.getElementById('hpLabel').textContent='❤️ '+Math.floor(st.hp)+'/'+st.hpMax;
+  var a=st.act&&AM[st.act],d=a?a.sec/sp(a.sk):1;
+  var skFlavor='';
+  SK.forEach(function(s){if(s[0]===cur)skFlavor=s[3]||'';});
+  var status=a?a.nom+' · '+d.toFixed(1).replace('.',',')+'s':(skFlavor||'Choisis une activité, feignant');
+  if(Date.now()<st.buff)status+=' · Apéro '+Math.ceil((st.buff-Date.now())/60000)+'min';
+  document.getElementById('cn').textContent=status;
+  document.getElementById('cb').style.width=a?Math.min(100,st.prog/d*100)+'%':'0';
+  DR.forEach(function(b){document.getElementById('d-'+b[0]).disabled=Date.now()<st.buff||!has(b[5]);});
+  var l=lvl(cur),lo=xpForLevel(l),hi=xpForLevel(l+1);
+  document.getElementById('lv').textContent=l>=50?'Niv. 50 · MAX':'Niv. '+l;
+  document.getElementById('sp').textContent='×'+sp(cur).toFixed(2).replace('.',',');
+  document.getElementById('xb').style.width=(l>=50?'100':Math.max(0,Math.min(100,(st.xp[cur]-lo)/(hi-lo)*100)))+'%';
+  SK.forEach(function(s){var id=s[0];document.getElementById('pl-'+id).className=id===cur?'on':'';
+    document.getElementById('t-'+id).textContent='Niv. outil '+st.tool[id]+(st.tool[id]>=8?' (max)':' · '+fmt(tcost(id))+' €');
+    var u=document.getElementById('u-'+id);u.textContent=st.tool[id]>=8?'Max':'Améliorer';u.disabled=st.tool[id]>=8||inv('or')<tcost(id);});
+  A.forEach(function(x){
+    var on=st.act===x.id,lock=lvl(x.sk)<x.lvl,e=document.getElementById('a-'+x.id);
+    var show=x.sk===cur;
+    e.style.display=show?'':'none';
+    e.hidden=!show;
+    e.className='card row'+(on?' active':'')+(lock?' lock':'');
+    if(!show)return;
+    var safeInn=x.inn&&typeof x.inn==='object'?x.inn:{};var safeOut=x.out&&typeof x.out==='object'?x.out:{};
+    var cost=Object.keys(safeInn).length?'−'+txt(safeInn)+' · ':'';
+    document.getElementById('ad-'+x.id).textContent=cost+(txt(safeOut)?'+'+txt(safeOut)+' · ':'')+(Number(x.sec)||0)+'s';
+    var g=document.getElementById('g-'+x.id);g.disabled=lock;g.textContent=lock?'Niv.'+x.lvl:(on?'Stop':'Go');g.className='btn'+(on?' primary':'');
+  });
+  ['batte','treillis'].forEach(function(k){var n=st.eq[k],b=document.getElementById('eb-'+k),t=document.getElementById('e-'+k);
+    if(n>=3){t.textContent='Max';b.textContent='Max';b.disabled=true;return;}
+    var c=ecost(k);t.textContent='Palier '+n+' → '+c.q+' '+IT[c.l][0]+' + '+c.g+' €';b.disabled=inv(c.l)<c.q||inv('or')<c.g;});
+  var gn=gain();document.getElementById('rt').textContent='+'+gn+' ★ (niveaux : '+sum()+')';document.getElementById('rb').disabled=gn<1;
+  Q.forEach(function(q,i){var b=document.getElementById('q'+i),ok=has(q[2]);b.textContent=st.done[i]?'Fait':'Livrer';b.disabled=!!st.done[i]||!ok;b.className='btn'+(ok&&!st.done[i]?' primary':'');});
+  renderBag();renderPerso();renderMarket();
+}
+var T=document.getElementById('toast');
+function toast(m,isDrop){document.getElementById('tt').textContent=m;T.style.display='block';T.className='toast'+(isDrop?' drop-toast':'');}
+var L0={};
+function tick(){
+  var now=Date.now(),dt=Math.min((now-st.t)/1000,CAP);st.t=now;
+  /* Régén PV lente hors combat */
+  if(!combatState&&st.hp<st.hpMax){st.hp=Math.min(st.hpMax,st.hp+dt*0.15);}
+  var offlineGain=dt>=60;
+  var invBefore={};for(var ik in st.inv)invBefore[ik]=st.inv[ik]||0;
+  var xpBefore={};for(var xk in st.xp)xpBefore[xk]=st.xp[xk]||0;
+  var goldBefore=inv('or'),dropBefore=st.lastDrop;
+  advance(dt);
+  if(offlineGain){
+    var gained=[];
+    for(var k in st.inv){var delta=(st.inv[k]||0)-(invBefore[k]||0);if(delta>0)gained.push('+'+fmt(delta)+' '+(IT[k]?IT[k][0]:k).toLowerCase());}
+    for(var sk in st.xp){var xd=(st.xp[sk]||0)-(xpBefore[sk]||0);if(xd>0)gained.push('+'+fmt(xd)+' XP '+(SK.find(function(a){return a[0]===sk;})||[sk,sk])[1]);}
+    if(inv('or')>goldBefore&&!gained.some(function(x){return x.indexOf('€')>=0;}))gained.unshift('+'+fmt(inv('or')-goldBefore)+' €');
+    if(st.lastDrop&&st.lastDrop!==dropBefore&&DROP[st.lastDrop])gained.push('🎁 '+DROP[st.lastDrop].nom);
+    var elapsed=Math.max(1,Math.round(dt/60));
+    var title=document.getElementById('letterTitle'),message=document.getElementById('letterMessage'),modal=document.getElementById('letterModal');
+    if(title)title.textContent='🌙 Gains hors ligne';
+    if(message)message.textContent='Pendant ton absence ('+elapsed+' min), '+(st.act?'ton activité a continué. ':'')+(gained.length?gained.join(' · '):'aucun gain obtenu cette fois.')+'\n\n'+(dt>=CAP?'Le calcul est limité à 8 heures d’absence.':'');
+    if(modal)modal.classList.add('show');
+    st.lastDrop=null;
+  }else if(st.lastDrop&&st.lastDrop!==dropBefore&&DROP[st.lastDrop]){var d=DROP[st.lastDrop];var rareLabel={common:'Commun',uncommon:'Inhabituel',rare:'Rare',epic:'Épique',legendary:'Légendaire',extralegendary:'Extra légendaire',mythic:'Mythique'}[d.rare]||'';toast('🎁 '+d.nom+(rareLabel?' ('+rareLabel+')':'')+' !',true);st.lastDrop=null;}
+  SK.forEach(function(s){var l=lvl(s[0]);if(L0[s[0]]&&l>L0[s[0]]){toast(s[1]+' → niv. '+l);if(typeof pushAct==='function')pushAct(st.pseudo||'Quelqu\'un','a atteint le niveau '+l+' en '+s[1]);}L0[s[0]]=l;});
+  if(st.msg){toast(st.msg);st.msg=null;}render();
+}
+document.addEventListener('click',function(e){
+  var D=e.target.dataset||{};
+  if(D.sk)cur=D.sk;
+  if(D.act){st.act=st.act===D.act?null:D.act;st.prog=0;st.t=Date.now();}
+  if(D.sell){st.inv.or=inv('or')+inv(D.sell)*IT[D.sell][1];st.inv[D.sell]=0;}
+  if(D.selldrop){var dd=DROP[D.selldrop];if(dd&&dd.unique){toast('Pas de vente PNJ pour les Quequettes');}else if(dd&&dropQty(D.selldrop)>=1){st.inv.or=inv('or')+dropQty(D.selldrop)*(dd.val||1);st.drops[D.selldrop]=0;}}
+  if(D.up&&inv('or')>=tcost(D.up)&&st.tool[D.up]<8){st.inv.or-=tcost(D.up);st.tool[D.up]++;}
+  if(D.eq&&st.eq[D.eq]<3){var c=ecost(D.eq);if(inv(c.l)>=c.q&&inv('or')>=c.g){st.inv[c.l]-=c.q;st.inv.or-=c.g;st.eq[D.eq]++;}}
+  if(D.q!==undefined&&!st.done[D.q]&&has(Q[D.q][2])){var q=Q[D.q];for(var k in q[2])st.inv[k]-=q[2][k];st.inv.or=inv('or')+q[3];st.done[D.q]=1;var qThanks={Nanard:'Nanard : « Merci frérot. La cabane t\'aime. »',Riton:'Riton : « Enfin. J\'avais faim. »',Poumes:'Poumes : « Nickel. Direction le compost. »',Stalek:'Stalek : « …ok. » (il est content, promis)',Paulo:'Paulo : « Pas mal. Pour un amateur. »',Coco:'Coco : « Top. Je gère la famille et je reviens. »','La bande':'La bande : « SOIRÉEEEEE »'}[q[0]]||(q[0]+' est content');toast(qThanks+' +'+q[3]+' €');if(typeof pushAct==='function')pushAct(st.pseudo||'Quelqu\'un','a livré la quête de '+q[0]);}
+  if(D.drink&&Date.now()>=st.buff){var dr=DR.filter(function(x){return x[0]===D.drink;})[0];if(dr&&has(dr[5])){var co=Date.now()<cocoEnd;for(var k in dr[5])st.inv[k]-=dr[5][k];st.buff=Date.now()+dr[4]*(co?2:1);st.buffM=dr[3];toast(co?(D.drink==='pastis'?'Coco : « Un vrai pastis. » Il boit comme 4, durée ×2 !':'Coco trinque avec toi : durée ×2 !'):(D.drink==='cru'?'Paulo approuve. À peine.':'Tchin, grosse merde !'));}}
+  if(D.wear){var item=DROP[D.wear];if(!item||item.cat!=='eq')return;var slot=item.slot;if(st.equipped[slot]===D.wear)delete st.equipped[slot];else st.equipped[slot]=D.wear;}
+  if(D.open){openChest(D.open);return;}
+  if(D.read){readNote(D.read);return;}
+  if(D.malus){if(typeof window.sendMalus==='function')window.sendMalus(D.malus);return;}
+  if(D.social){if(typeof window.sendSocial==='function')window.sendSocial(D.social);return;}
+  if(D.heal){
+    var hi=DROP[D.heal];
+    if(!hi||hi.cat!=='heal'||dropQty(D.heal)<1)return;
+    if(st.hp>=st.hpMax&&!hi.healAll){toast('Déjà full PV, glouton');return;}
+    st.drops[D.heal]=dropQty(D.heal)-1;
+    if(hi.healAll){
+      var got=applyHeal(hi.heal||40);
+      if(typeof window.sendApero==='function')window.sendApero(hi.heal||40);
+      toast('🍻 Apéro ! +'+got+' PV pour toi — la bande aussi trinque');
+    }else{
+      var got2=applyHeal(hi.heal||10);
+      toast('❤️ '+hi.nom+' : +'+got2+' PV');
+    }
+  }
+  if(D.buff){
+    var bi=DROP[D.buff];
+    if(!bi||bi.cat!=='buff'||dropQty(D.buff)<1)return;
+    st.drops[D.buff]=dropQty(D.buff)-1;
+    if(D.buff==='item_branlette'){st.xpBuffPct=10;st.xpBuffUntil=Date.now()+5*60*1000;toast('🔥 Branlette activée : +10% XP · 5 min');}
+    else if(D.buff==='item_pute'){st.xpBuffPct=50;st.xpBuffUntil=Date.now()+10*60*1000;st.orNerfPct=50;st.orNerfUntil=Date.now()+10*60*1000;toast('🔥 Pute activée : +50% XP mais -50% € · 10 min');}
+    else if(D.buff==='item_baise'){st.xpBuffPct=50;st.xpBuffUntil=Date.now()+3*60*1000;toast('🔥 Baise activée : +50% XP · 3 min');}
+  }
+  if(D.ticket){
+    var tk=DROP[D.ticket];
+    if(!tk||tk.cat!=='ticket'||dropQty(D.ticket)<1)return;
+    if(ticketPct()>0){toast('T\'as déjà un ticket actif');return;}
+    st.drops[D.ticket]=dropQty(D.ticket)-1;
+    st.ticketPct=tk.pct;st.ticketUntil=Date.now()+5*60*1000;
+    toast('🎟️ Ticket -'+tk.pct+'% activé pour 5 min sur le marché !');
+  }
+  if(D.leaveteam){st.teamWith=null;st.teamName=null;toast('Équipe dissoute. Bière finie.');}
+  if(D.tab){['act','bag','perso','shop','goal','band','boss'].forEach(function(p){var el=document.getElementById('p-'+p);if(el)el.hidden=p!==D.tab;});document.querySelectorAll('nav button').forEach(function(b){b.className=b.dataset.tab===D.tab?'on':'';});window.scrollTo(0,0);if(D.tab==='boss'&&typeof window.renderBossTab==='function')window.renderBossTab();}
+  if(D.sub){['mat','eq','conso'].forEach(function(s){document.getElementById('bag-'+s).hidden=s!==D.sub;});document.querySelectorAll('#bagTabs button').forEach(function(b){b.className=b.dataset.sub===D.sub?'on':'';});}
+  if(D.psub){['fiche','quequette','loot'].forEach(function(s){document.getElementById('perso-'+s).hidden=s!==D.psub;});document.querySelectorAll('#persoTabs button').forEach(function(b){b.className=b.dataset.psub===D.psub?'on':'';});}
+  if(D.ssub){['craft','buy','sell','peer'].forEach(function(s){document.getElementById('shop-'+s).hidden=s!==D.ssub;});document.querySelectorAll('#shopTabs button').forEach(function(b){b.className=b.dataset.ssub===D.ssub?'on':'';});}
+  if(D.mbuy){
+    var bp=buyPrice(D.mbuy);
+    if(inv('or')<bp){toast('Pas assez de thune');}
+    else{st.inv.or-=bp;addItem(D.mbuy,1);toast('Acheté : '+itemName(D.mbuy)+' pour '+bp+' €');}
+  }
+  if(D.msell){
+    if(DROP[D.msell]&&DROP[D.msell].unique){toast('Les Quequettes ne se vendent pas au PNJ. Marché potes only.');}
+    else if(ownedQty(D.msell)<1){toast('T\'as rien');}
+    else{var sp=sellPrice(D.msell);removeItem(D.msell,1);st.inv.or=inv('or')+sp;toast('Vendu 1 '+itemName(D.msell)+' · +'+sp+' €');}
+  }
+  if(D.msellall){
+    if(DROP[D.msellall]&&DROP[D.msellall].unique){toast('Les Quequettes ne se vendent pas au PNJ.');}
+    else{var qq=ownedQty(D.msellall);if(qq<1){toast('T\'as rien');}
+    else{var sp2=sellPrice(D.msellall)*qq;removeItem(D.msellall,qq);st.inv.or=inv('or')+sp2;toast('Vendu ×'+qq+' '+itemName(D.msellall)+' · +'+sp2+' €');}}
+  }
+  save();render();
+});
+document.getElementById('rb').onclick=function(){var gn=gain();if(gn<1)return;var o=fresh();o.stars=st.stars+gn;o.done=st.done;o.n=st.n;o.give=st.give;o.pseudo=st.pseudo;o.pseudoSet=st.pseudoSet;o.sdone=st.sdone;o.dayKey=st.dayKey;o.dayN=st.dayN;o.drops=st.drops;o.equipped=st.equipped;o.lootLog=st.lootLog||[];st=o;save();toast('Nouvelle saison ! +'+gn+' ★ — Nanard a déjà oublié la précédente');render();};
+document.getElementById('tok').onclick=function(){T.style.display='none';};
+var rt=null,rs=document.getElementById('rs');
+rs.onclick=function(){if(rt){clearTimeout(rt);rt=null;st=fresh();save();rs.textContent='Effacer la partie';T.style.display='none';render();return;}rs.textContent='Appuie encore pour confirmer';rt=setTimeout(function(){rt=null;rs.textContent='Effacer la partie';},3000);};
+document.addEventListener('visibilitychange',function(){if(!document.hidden)tick();});
+/* ========== MINI-JEUX ========== */
+var MG={sk:null,timer:null,raf:null,state:null};
+var MG_META={
+  bois:{title:'Clou de Nanard',sub:'Tape quand le curseur est dans la zone verte. 5 clous.'},
+  mine:{title:'Tri de Poumes',sub:'Touche uniquement les canettes. Évite le reste !'},
+  forge:{title:'Garage de Coco',sub:'Reproduis la séquence de pièces. Coco regarde… de loin.'},
+  peche:{title:'Ferrage de Stalek',sub:'Attends la touche… puis tape vite. Il paraît qu\'il aime pas ça.'},
+  cuisine:{title:'Grill de Riton',sub:'Retourne avant que ça brûle. Les extincteurs sont prêts.'},
+  vigne:{title:'Vendanges de Paulo',sub:'Cueille le bon raisin. Rate et Paulo te note 2/10.'},
+  combat:{title:'Bagarre',sub:'Enchaîne les coups dans l\'ordre. À la militaire.'}
+};
+function mgReward(sk,score,max){
+  var ratio=Math.max(0,Math.min(1,score/max));
+  var xp=Math.floor((8+lvl(sk)*3)*ratio*(0.7+Math.random()*0.5));
+  st.xp[sk]=(st.xp[sk]||0)+xp;
+  var gold=Math.floor((3+lvl(sk)*2)*ratio);
+  st.inv.or=inv('or')+gold;
+  /* petit loot lié au métier */
+  var outs={
+    bois:['palette','planche'],mine:['canette','ferraille'],forge:['alu','acier'],
+    peche:['goujon','brochet'],cuisine:['saucisse','bbq'],vigne:['raisin','piquette'],combat:['or']
+  };
+  var pool=outs[sk]||['palette'];
+  var item=pool[Math.floor(Math.random()*pool.length)];
+  if(item==='or'){st.inv.or=inv('or')+Math.floor(5*ratio);}
+  else if(IT[item]){st.inv[item]=inv(item)+Math.max(1,Math.floor(2*ratio));}
+  if(ratio>=0.8&&Math.random()<0.25){
+    var eqId=rollEqDrop();
+    if(eqId){st.drops[eqId]=dropQty(eqId)+1;logLoot(eqId,'mini-jeu');}
+  }
+  if(ratio>=0.6&&Math.random()<0.15){
+    var cId=rollChestDrop();
+    if(cId){st.drops[cId]=dropQty(cId)+1;logLoot(cId,'mini-jeu');}
+  }
+  st.n++;dn();
+  save();render();
+  var msg=ratio>=0.8?'Propre ! +'+xp+' xp · +'+gold+' €':(ratio>=0.4?'Pas mal pour un amateur. +'+xp+' xp · +'+gold+' €':'Nanard est déçu. +'+xp+' xp · +'+gold+' €');
+  toast(msg,ratio>=0.8);
+  if(typeof pushAct==='function')pushAct(st.pseudo||'Quelqu\'un','a fait le mini-jeu '+MG_META[sk].title);
+}
+function mgClose(){
+  if(MG.timer){clearInterval(MG.timer);MG.timer=null;}
+  if(MG.raf){cancelAnimationFrame(MG.raf);MG.raf=null;}
+  MG.state=null;MG.sk=null;
+  combatState=null;
+  document.getElementById('mgCancel').textContent='Fermer';
+  document.getElementById('mgCancel').onclick=mgClose;
+  document.getElementById('mg').classList.remove('show');
+}
+function mgOpen(sk){
+  mgClose();
+  MG.sk=sk;
+  var meta=MG_META[sk];
+  document.getElementById('mgTitle').textContent=meta.title;
+  document.getElementById('mgSub').textContent=meta.sub;
+  document.getElementById('mgScore').textContent='';
+  document.getElementById('mgAction').textContent='C\'est parti';
+  document.getElementById('mgAction').onclick=function(){mgStart(sk);};
+  document.getElementById('mgArea').innerHTML='<div class="empty" style="padding:20px 0">Appuie sur C\'est parti</div>';
+  document.getElementById('mg').classList.add('show');
+}
+function mgStart(sk){
+  if(MG.timer){clearInterval(MG.timer);MG.timer=null;}
+  if(MG.raf){cancelAnimationFrame(MG.raf);MG.raf=null;}
+  var starters={bois:mgBois,mine:mgMine,forge:mgForge,peche:mgPeche,cuisine:mgCuisine,vigne:mgVigne,combat:mgCombat};
+  (starters[sk]||mgBois)();
+}
+/* --- Bricolage : timing --- */
+function mgBois(){
+  var hits=0,need=5,pos=0,dir=1,speed=1.4+lvl('bois')*0.05;
+  var zoneL=35+Math.random()*15,zoneW=12+Math.max(0,10-lvl('bois')*0.3);
+  var area=document.getElementById('mgArea');
+  area.innerHTML='<div class="mg-bar-track"><div class="mg-bar-zone" id="mgZone"></div><div class="mg-bar-cursor" id="mgCur"></div></div><div class="mg-score" id="mgH">Clous : 0 / '+need+'</div>';
+  document.getElementById('mgZone').style.left=zoneL+'%';
+  document.getElementById('mgZone').style.width=zoneW+'%';
+  document.getElementById('mgAction').textContent='Planter !';
+  document.getElementById('mgAction').onclick=function(){
+    var inZone=pos>=zoneL&&pos<=zoneL+zoneW;
+    if(inZone){hits++;document.getElementById('mgH').textContent='Clous : '+hits+' / '+need;zoneL=20+Math.random()*50;zoneW=10+Math.max(0,12-hits);document.getElementById('mgZone').style.left=zoneL+'%';document.getElementById('mgZone').style.width=zoneW+'%';speed+=0.15;}
+    else{hits=Math.max(0,hits-1);document.getElementById('mgH').textContent='Raté ! '+hits+' / '+need;}
+    if(hits>=need){mgClose();mgReward('bois',hits,need);}
+  };
+  function loop(){
+    pos+=dir*speed;if(pos>=100){pos=100;dir=-1;}if(pos<=0){pos=0;dir=1;}
+    var c=document.getElementById('mgCur');if(c)c.style.left=pos+'%';
+    MG.raf=requestAnimationFrame(loop);
+  }
+  MG.raf=requestAnimationFrame(loop);
+}
+/* --- Recyclage : tri --- */
+function mgMine(){
+  var score=0,need=8,round=0;
+  var items=[{e:'🥫',ok:1},{e:'🍾',ok:0},{e:'📰',ok:0},{e:'🔧',ok:0},{e:'🧃',ok:1},{e:'👟',ok:0},{e:'🗑️',ok:0},{e:'♻️',ok:1}];
+  function next(){
+    round++;
+    if(score>=need||round>12){mgClose();mgReward('mine',score,need);return;}
+    var shuffle=items.slice().sort(function(){return Math.random()-0.5;}).slice(0,6);
+    var h='<div class="mg-score">Canettes : '+score+' / '+need+'</div><div class="mg-grid">';
+    shuffle.forEach(function(it,i){h+='<button data-ok="'+it.ok+'">'+it.e+'</button>';});
+    h+='</div>';
+    document.getElementById('mgArea').innerHTML=h;
+    document.getElementById('mgAction').textContent='…';
+    document.getElementById('mgAction').onclick=null;
+    document.getElementById('mgArea').onclick=function(e){
+      var b=e.target.closest('button');if(!b||!b.dataset.ok)return;
+      if(b.dataset.ok==='1'){score++;b.className='good';}
+      else{b.className='bad';score=Math.max(0,score-1);}
+      setTimeout(next,280);
+    };
+  }
+  next();
+}
+/* --- Garage : séquence --- */
+function mgForge(){
+  var parts=['🔩','⚙️','🔧','🪛','🧱'];
+  var len=3+Math.min(3,Math.floor(lvl('forge')/3));
+  var seq=[],player=[],showing=true;
+  for(var i=0;i<len;i++)seq.push(parts[Math.floor(Math.random()*parts.length)]);
+  var area=document.getElementById('mgArea');
+  function showSeq(i){
+    var h='<div class="mg-score">Mémorise…</div><div class="mg-seq" id="mgSeq">';
+    seq.forEach(function(){h+='<span>·</span>';});
+    h+='</div>';
+    area.innerHTML=h;
+    var spans=area.querySelectorAll('#mgSeq span');
+    var idx=0;
+    function flash(){
+      if(idx>=seq.length){showing=false;buildInput();return;}
+      spans[idx].textContent=seq[idx];spans[idx].className='on';
+      setTimeout(function(){spans[idx].className='';spans[idx].textContent='·';idx++;setTimeout(flash,200);},500);
+    }
+    setTimeout(flash,400);
+  }
+  function buildInput(){
+    player=[];
+    var h='<div class="mg-score">À toi</div><div class="mg-seq" id="mgSeq">';
+    seq.forEach(function(){h+='<span>·</span>';});
+    h+='</div><div class="mg-grid">';
+    parts.forEach(function(p){h+='<button data-p="'+p+'">'+p+'</button>';});
+    h+='</div>';
+    area.innerHTML=h;
+    area.onclick=function(e){
+      var b=e.target.closest('button');if(!b||!b.dataset.p||showing)return;
+      player.push(b.dataset.p);
+      var spans=area.querySelectorAll('#mgSeq span');
+      var i=player.length-1;
+      spans[i].textContent=player[i];
+      if(player[i]===seq[i])spans[i].className='ok';
+      else{spans[i].className='no';setTimeout(function(){mgClose();mgReward('forge',0,len);},400);return;}
+      if(player.length===seq.length){setTimeout(function(){mgClose();mgReward('forge',len,len);},300);}
+    };
+  }
+  document.getElementById('mgAction').textContent='…';
+  document.getElementById('mgAction').onclick=null;
+  showSeq(0);
+}
+/* --- Pêche --- */
+function mgPeche(){
+  var score=0,need=5,waiting=false,canHook=false,hookTimer=null;
+  var area=document.getElementById('mgArea');
+  function cast(){
+    canHook=false;waiting=true;
+    area.innerHTML='<div class="mg-fish" id="mgFish">🎣</div><div class="mg-score">Prises : '+score+' / '+need+' · En attente…</div>';
+    document.getElementById('mgAction').textContent='…';
+    document.getElementById('mgAction').onclick=null;
+    var delay=800+Math.random()*2200;
+    MG.timer=setTimeout(function(){
+      canHook=true;
+      var f=document.getElementById('mgFish');if(f){f.textContent='🐟';f.className='mg-fish bite';}
+      document.getElementById('mgScore').textContent='Prises : '+score+' / '+need+' · MAINTENANT !';
+      document.getElementById('mgAction').textContent='Ferrer !';
+      document.getElementById('mgAction').onclick=hook;
+      hookTimer=setTimeout(function(){canHook=false;if(score<need)cast();},700+Math.random()*400);
+    },delay);
+  }
+  function hook(){
+    if(!canHook){document.getElementById('mgScore').textContent='Trop tôt, Stalek soupire.';return;}
+    canHook=false;if(hookTimer)clearTimeout(hookTimer);
+    score++;
+    if(score>=need){mgClose();mgReward('peche',score,need);return;}
+    cast();
+  }
+  document.getElementById('mgAction').textContent='Lancer';
+  document.getElementById('mgAction').onclick=cast;
+  area.innerHTML='<div class="mg-fish">🎣</div><div class="mg-score">Appuie sur Lancer</div>';
+}
+/* --- Barbecue --- */
+function mgCuisine(){
+  var n=4,done=0,burned=0;
+  var items=[];
+  for(var i=0;i<n;i++)items.push({heat:0,speed:0.4+Math.random()*0.5,flipped:false,dead:false});
+  var area=document.getElementById('mgArea');
+  function draw(){
+    var h='<div class="mg-cook">';
+    items.forEach(function(it,i){
+      if(it.dead)return;
+      var col=it.heat<55?'#4caf50':(it.heat<80?'#ffc107':'#c45c5c');
+      h+='<div class="item" data-i="'+i+'"><span>'+(it.flipped?'🍖':'🥩')+'</span><div class="heat"><i style="width:'+it.heat+'%;background:'+col+'"></i></div><button class="btn" data-flip="'+i+'">'+(it.flipped?'OK':'Retourner')+'</button></div>';
+    });
+    h+='</div><div class="mg-score">Sauvés : '+done+' · Cramés : '+burned+'</div>';
+    area.innerHTML=h;
+  }
+  area.onclick=function(e){
+    var b=e.target.closest('[data-flip]');if(!b)return;
+    var i=+b.dataset.flip,it=items[i];
+    if(!it||it.dead||it.flipped)return;
+    if(it.heat>=30&&it.heat<85){it.flipped=true;it.dead=true;done++;}
+    else{it.dead=true;burned++;}
+    if(done+burned>=n){mgClose();mgReward('cuisine',done,n);}
+    else draw();
+  };
+  document.getElementById('mgAction').textContent='…';
+  document.getElementById('mgAction').onclick=null;
+  draw();
+  MG.timer=setInterval(function(){
+    items.forEach(function(it){
+      if(it.dead)return;
+      it.heat+=it.speed*2.2;
+      if(it.heat>=100){it.dead=true;burned++;}
+    });
+    if(done+burned>=n){clearInterval(MG.timer);MG.timer=null;mgClose();mgReward('cuisine',done,n);return;}
+    draw();
+  },200);
+}
+/* --- Vendanges --- */
+function mgVigne(){
+  var score=0,need=10,left=15;
+  var goods=['🍇','🍇','🍇','🍈'];
+  var bads=['🪨','🐛','🍃','🥔'];
+  function wave(){
+    if(score>=need||left<=0){mgClose();mgReward('vigne',score,need);return;}
+    left--;
+    var pool=[];
+    for(var i=0;i<6;i++)pool.push(Math.random()<0.55?{e:goods[Math.floor(Math.random()*goods.length)],ok:1}:{e:bads[Math.floor(Math.random()*bads.length)],ok:0});
+    var h='<div class="mg-score">Raisins : '+score+' / '+need+' · Restant : '+left+'</div><div class="mg-grid">';
+    pool.forEach(function(it){h+='<button data-ok="'+it.ok+'">'+it.e+'</button>';});
+    h+='</div>';
+    document.getElementById('mgArea').innerHTML=h;
+    document.getElementById('mgArea').onclick=function(e){
+      var b=e.target.closest('button');if(!b||!b.dataset.ok)return;
+      if(b.dataset.ok==='1'){score++;b.className='good';}
+      else{b.className='bad';score=Math.max(0,score-1);}
+      setTimeout(wave,250);
+    };
+  }
+  document.getElementById('mgAction').textContent='…';
+  document.getElementById('mgAction').onclick=null;
+  wave();
+}
+/* --- Bagarre --- */
+function mgCombat(){
+  var keys=['👊','🦵','🛡️','💥'];
+  var len=4+Math.min(4,Math.floor(lvl('combat')/2));
+  var seq=[],player=[],i;
+  for(i=0;i<len;i++)seq.push(keys[Math.floor(Math.random()*keys.length)]);
+  var area=document.getElementById('mgArea');
+  function draw(){
+    var h='<div class="mg-score">Combo '+player.length+' / '+len+'</div><div class="mg-seq">';
+    seq.forEach(function(k,idx){
+      var cls=idx<player.length?(player[idx]===seq[idx]?'ok':'no'):(idx===player.length?'on':'');
+      h+='<span class="'+cls+'">'+(idx<=player.length?k:'·')+'</span>';
+    });
+    h+='</div><div class="mg-grid">';
+    keys.forEach(function(k){h+='<button data-k="'+k+'">'+k+'</button>';});
+    h+='</div>';
+    area.innerHTML=h;
+  }
+  area.onclick=function(e){
+    var b=e.target.closest('button');if(!b||!b.dataset.k)return;
+    player.push(b.dataset.k);
+    if(player[player.length-1]!==seq[player.length-1]){draw();setTimeout(function(){mgClose();mgReward('combat',player.length-1,len);},350);return;}
+    if(player.length===len){draw();setTimeout(function(){mgClose();mgReward('combat',len,len);},300);return;}
+    draw();
+  };
+  document.getElementById('mgAction').textContent='…';
+  document.getElementById('mgAction').onclick=null;
+  draw();
+}
+
+document.getElementById('btnMg').onclick=function(){mgOpen(cur);};
+document.getElementById('mgCancel').onclick=function(){mgClose();};
+
+tick();setInterval(tick,250);setInterval(save,2000);
+/* Blague ambiante de temps en temps */
+setInterval(function(){
+  if(document.hidden||Math.random()>0.4)return;
+  if(T.style.display==='block')return;
+  toast('💬 '+JOKES[Math.floor(Math.random()*JOKES.length)]);
+},180000);
+/* Pop-ups banter potes (centre écran) */
+var POTES_NAMES=['Nanard','Poumes','Stalek','Riton','Paulo','Coco','Hugo','Paul','Jérémy','Steve','Henry','Corentin'];
+var BANTER=[
+  '{A} trouve que tu as un petit sexe.',
+  '{A} te bat à la bagarre. Même en rêve.',
+  'Fils de pute.',
+  '{A} aimerait bien dormir avec toi dans la baignoire.',
+  '{A} te trouve mignon. (Il est sérieux. C\'est flippant.)',
+  '{A} dit que t\'as une tête à manger des chips au lit.',
+  '{A} a voté : tu es officiellement le plus susceptible de la bande.',
+  '{A} t\'a insulté en silence. Tu l\'as senti.',
+  '{A} : « T\'es moche. » Fin du message.',
+  '{A} veut te faire un câlin. Puis te mettre un pain.',
+  '{A} a rêvé de toi. Il veut pas en parler.',
+  '{A} te doit une bière. Il paiera jamais.',
+  '{A} pense que tu triches. Il a raison.',
+  '{A} t\'envoie un doigt d\'honneur virtuel. 🖕🏻',
+  '{A} a dit du bien de toi. Personne n\'a cru.',
+  '{A} te trouve fort. Pour un amateur.',
+  '{A} voudrait partager un pastis. Et tes secrets.',
+  '{A} a noté ton style : 2/10. Généreux.',
+  '{A} te compare à une palette bancale. Affectueux, promis.',
+  '{A} a failli t\'appeler. Il a changé d\'avis.',
+  '{A} te protège. Sauf quand y a de l\'argent en jeu.',
+  '{A} te trouve chaud. Genre le barbecue de Riton.',
+  '{A} veut se battre. Puis boire. Dans cet ordre.',
+  '{A} t\'a stalk sur tes stats. Il est jaloux.',
+  '{A} dit que t\'as l\'air d\'un silure. C\'est un compliment.',
+  '{A} te propose un plan à 3. Le 3e c\'est le silence de Stalek.',
+  '{A} a crié ton nom en dormant. Gênant.',
+  '{A} te trouve loyal. Comme une canette de Poumes.',
+  '{A} : « Gros naze. » Mais avec de l\'amour.',
+  '{A} veut tes vêtements. Pas une blague.',
+  '{A} te nique mentalement depuis 2019.',
+  '{A} te kiffe trop pour le dire. Alors il t\'insulte.',
+  '{A} a écrit une chanson sur toi. Elle est nulle.',
+  '{A} te réserve le canapé. Pour toujours.',
+  '{A} te défie au regard. Tu as déjà perdu.',
+  '{A} dit que t\'es son préféré. Il dit ça à tout le monde.',
+  '{A} te trouve bizarre. Il reste.',
+  '{A} a gardé une photo de toi. Il sait pas pourquoi.',
+  '{A} te laisse la dernière saucisse. Miracle.',
+  '{A} t\'insulte en latin. Ça compte quand même.',
+  '{A} veut un bisou sur le front. Puis un coup de batte.',
+  '{A} te range dans la catégorie « pote en or / connard en chef ».',
+  '{A} a parié que tu dropperais une Momole. Il a gagné.',
+  '{A} te trouve sexy en casque de chantier.',
+  '{A} te menace d\'un câlin forcé.',
+  '{A} : « J\'aime pas la pêche. » Mais il t\'aime bien. Bizarre.',
+  '{A} te doit un « faut qu\'on parle ». Fuis.',
+  '{A} a mis ton pseudo en favori. Creepy.',
+  '{A} te lance une olive. C\'est son langage d\'amour.',
+  '{A} te trouve trop fort. Il va te nerf à coups de malus.',
+  'Connard.',
+  'T\'es beau. Non je déconne.',
+  '{A} et {B} parlent de toi. C\'est pas flatteur.',
+  '{A} a dit à {B} que t\'étais son crush. {B} a vomi.',
+  '{A} te challenge : « Regarde-moi dans les yeux. » Tu as cligné.',
+  '{A} t\'offre une piquette. Piège.',
+  '{A} te trouve plus utile qu\'une palette. High praise.',
+  '{A} veut que tu viennes. Coco aussi. Personne ne viendra.',
+  '{A} a softblock ton aura. Mystique.',
+  '{A} te met 10/10 en « présence gênante ».',
+  '{A} rêve de te voir full stuff mythique. Pour te tabasser après.',
+  '{A} : « T\'es mon frère. » *te vole 10 €*',
+  '{A} te trouve fragile. Comme la cabane de Nanard.',
+  '{A} t\'envoie de l\'amour. Format : insulte.',
+  '{A} a capturé ton âme dans une canette.',
+  '{A} te préfère bourré. Honnête.',
+  '{A} te fait un clin d\'œil. Tu es perdu.',
+  '{A} a noté : « À éliminer en duel. »',
+  '{A} te trouve drôle. Quand tu perds.',
+  '{A} veut la cuillère dans le lit. Métaphore… ou pas.',
+  '{A} te respecte. Les mardis uniquement.',
+  '{A} t\'a dessiné nu. Niveau artistique : 1/10.',
+  '{A} dit que t\'as un gros cerveau. Et un petit… non.',
+  '{A} te challenge à boire. Tu as déjà perdu.',
+  '{A} te trouve irrésistible. Comme une Momole.',
+  '{A} : « Je t\'aime bien. » Erreur système. Reboot.',
+  '{A} et toi, c\'est du grand cru. Selon Paulo (mensonge).',
+  '{A} te garde sous le coude. Pour les duels.',
+  '{A} t\'insulte avec tendresse. Spécialité maison.',
+  '{A} veut te présenter à sa mère. Elle refusera.',
+  '{A} te met dans son testament. Tu hérites d\'une tongs.',
+  '{A} a soft-launch ton amitié sur le feed.',
+  '{A} te trouve chaud bouillant. Extincteur prêt.',
+  '{A} te doit un secret. Il a oublié lequel.',
+  '{A} te lance « fils de pute » en mode câlin.',
+  '{A} te trouve trop fort pour être vrai. Il cheatcheck.',
+  '{A} veut un plan cabane. Toi dedans. Portes fermées.',
+  '{A} te nique la vibe. Professionnellement.',
+  '{A} t\'adore. Il le montre mal.',
+  'La maman de {A} veut te parler…',
+  'La maman de {A} t\'a à l\'œil.',
+  'La maman de {A} demande de tes nouvelles. C\'est pas bon signe.',
+  'La maman de {A} veut te voir. Amène du pastis.',
+  'La maman de {A} t\'a softblock.',
+  'La maman de {A} te trouve charmant. {A} est jaloux.',
+  'La maman de {A} a dit : « Ce garçon-là… »',
+  'La maman de {A} veut te parler. Fuis.',
+  'La maman de {A} t\'a liké une story de 2017.',
+  'La maman de {A} prépare un « faut qu\'on parle ».',
+  'La maman de {A} t\'attend à table. Y a du fromage qui pue.',
+  'La maman de {A} a gardé une photo de toi. Flippant.',
+  '{A} : « T\'es une légende. » Puis « ntm ».',
+  '{A} te réserve une place sur le canapé. À vie.',
+  '{A} a un crush sur ton inventaire.',
+  '{A} te bat au regard de Stalek. Niveau impossible.',
+  '{A} te trouve parfait. Pour un bouc émissaire.',
+  '{A} t\'envoie de la force. Et une insulte.',
+  '{A} veut finir la soirée avec toi. Et le silence.',
+  '{A} te note 11/10. Il compte mal.',
+  '{A} a dit ton prénom en souriant. Flippant.',
+  '{A} te protège des autres. Pas de lui.',
+  '{A} te trouve beau gosse. Il est myope.',
+  '{A} : « On est potes. » *queue de malus*',
+  '{A} te kiffe en silence. Très fort. Très gênant.'
+];
+function showBanter(){
+  if(document.hidden)return;
+  if(document.getElementById('pseudoModal').style.display!=='none'&&document.getElementById('pseudoModal').classList.contains('show'))return;
+  if(document.getElementById('mg').classList.contains('show'))return;
+  if(combatState)return;
+  var a=POTES_NAMES[Math.floor(Math.random()*POTES_NAMES.length)];
+  var b=POTES_NAMES[Math.floor(Math.random()*POTES_NAMES.length)];
+  if(b===a)b=POTES_NAMES[(POTES_NAMES.indexOf(a)+1)%POTES_NAMES.length];
+  var tpl=BANTER[Math.floor(Math.random()*BANTER.length)];
+  var msg=tpl.replace(/\{A\}/g,a).replace(/\{B\}/g,b);
+  document.getElementById('banterText').textContent=msg;
+  document.getElementById('banterPopup').classList.add('show');
+  document.getElementById('banterPopup').style.display='flex';
+}
+document.getElementById('banterOk').onclick=function(){
+  document.getElementById('banterPopup').classList.remove('show');
+  document.getElementById('banterPopup').style.display='none';
+};
+setInterval(function(){
+  if(Math.random()>0.75)return;
+  showBanter();
+},420000); /* ~7 min en jeu */
+
+/* Popup plein écran pour les objets reçus d\'un autre joueur. */
+window._incomingPopupQueue=[];
+window._incomingPopupOpen=false;
+window.showIncomingItem=function(title,message,effect,itemId){
+  window._incomingPopupQueue.push({title:title,message:message,effect:effect,itemId:itemId});
+  if(!window._incomingPopupOpen)showNextIncomingItem();
+};
+function showNextIncomingItem(){
+  var data=window._incomingPopupQueue.shift();
+  if(!data){window._incomingPopupOpen=false;return;}
+  var modal=document.getElementById('incomingItemModal');
+  var t=document.getElementById('incomingItemTitle');
+  var m=document.getElementById('incomingItemMessage');
+  var ef=document.getElementById('incomingItemEffect');
+  if(t)t.textContent=data.title||'📨 Objet reçu';
+  if(m)m.textContent=data.message||'';
+  if(ef){ef.textContent=data.effect||'';ef.style.display=data.effect?'block':'none';}
+  window._incomingPopupOpen=true;
+  if(modal){modal.dataset.itemId=data.itemId||'';modal.classList.add('show');modal.style.display='flex';}
+}
+function closeIncomingItem(){
+  var modal=document.getElementById('incomingItemModal');
+  if(modal){modal.classList.remove('show');modal.style.display='none';}
+  window._incomingPopupOpen=false;
+  setTimeout(showNextIncomingItem,120);
+}
+document.getElementById('incomingItemOk').onclick=closeIncomingItem;
+document.getElementById('incomingItemModal').addEventListener('click',function(e){
+  if(e.target===this)closeIncomingItem();
+});
+if(cocoEnd)toast('Coco a un créneau ! Renfort Bagarre +30% xp · 10 min. Profite, ça arrive jamais.');else toast('Coco est avec sa famille. Il t\'envoie un pouce levé depuis le canapé.');
+</script>
+<script type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import {getAuth,signInAnonymously} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import {getFirestore,doc,setDoc,collection,addDoc,deleteDoc,onSnapshot,query,where,orderBy,limit} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+const cfg={apiKey:"AIzaSyDgyKg_Brf5CVGUajiCQTQglmxVGQGXM34",authDomain:"la-team-305ad.firebaseapp.com",databaseURL:"https://la-team-305ad-default-rtdb.firebaseio.com",projectId:"la-team-305ad",storageBucket:"la-team-305ad.firebasestorage.app",messagingSenderId:"72361489328",appId:"1:72361489328:web:79f66e792b1c53374a1c75"};
+let FS=null,ME=null,PL={},seen={},lastJ='',lastB='',sg={},feedItems=[];
+const ONLINE_MS=90000;
+const SO={id:'S1',needs:{saucisse:100,piquette:50,cru:10},reward:500};
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function today(){return new Date().toISOString().slice(0,10);}
+function txp(){var t=0;for(var k in st.xp)t+=st.xp[k];return Math.floor(t);}
+function bmsg(m){document.getElementById('bmsg').textContent=m;}
+function isOnline(p){return p&&p.lastSeen&&(Date.now()-p.lastSeen)<ONLINE_MS;}
+function sync(){if(!FS||!ME)return;var d={pseudo:(st.pseudo||'Joueur').slice(0,14),score:txp(),lv:sum(),stars:st.stars,dayKey:st.dayKey,dayN:st.dayN,give:st.give||{},lastSeen:Date.now(),act:st.act&&AM[st.act]?AM[st.act].nom:null};var j=JSON.stringify(d);if(j===lastJ)return;lastJ=j;setDoc(doc(FS,'players',ME),d,{merge:true}).catch(e=>{lastJ='';bmsg('Écriture impossible');});}
+function totals(){var t={};Object.keys(PL).forEach(i=>{var g=PL[i].give||{};for(var k in SO.needs)t[k]=(t[k]||0)+(+g[k]||0);});return t;}
+function rw(l,r){return '<div class="card row"><div class="info"><b>'+esc(l)+'</b></div><span style="color:var(--mute);font-size:0.85rem">'+esc(r)+'</span></div>';}
+function fillSel(id,opts){var el=document.getElementById(id),s=JSON.stringify(opts);if(sg[id]===s)return;sg[id]=s;var v=el.value;el.innerHTML=opts.map(o=>'<option value="'+esc(o[0])+'">'+esc(o[1])+'</option>').join('');if(opts.some(o=>o[0]===v))el.value=v;}
+function gsel(){var o=[];for(var k in IT)if(k!=='or'&&inv(k)>=1)o.push([k,IT[k][0]]);fillSel('git',o);}
+function renderOnline(){var ids=Object.keys(PL).filter(i=>isOnline(PL[i]));if(!ids.length){document.getElementById('online').innerHTML='<div class="empty">Personne en ligne</div>';return;}document.getElementById('online').innerHTML=ids.map(i=>{var p=PL[i],me=i===ME?' (toi)':'';var act=p.act?' · '+p.act:'';return '<div class="card row"><div class="info"><span class="dot on"></span><b>'+esc(p.pseudo||'Joueur')+me+'</b><small>niv. '+(p.lv||0)+act+'</small></div></div>';}).join('');}
+function renderFeed(){if(!feedItems.length){document.getElementById('feed').innerHTML='<div class="empty">Rien pour le moment</div>';return;}document.getElementById('feed').innerHTML=feedItems.slice(0,12).map(f=>'<div>'+esc(f.txt)+'</div>').join('');}
+window.pushAct=function(who,what){if(!FS||!ME)return;addDoc(collection(FS,'activity'),{txt:(who||'Quelqu\'un')+' '+what,t:Date.now(),from:ME}).catch(()=>{});};
+/* Uniques (Quequettes) */
+window.tryUniqueDrop=function(){
+  if(!FS||!ME)return;
+  if(Math.random()>0.00035)return;
+  const free=UNIQUE_IDS.filter(id=>!isUniqueOwned(id));
+  if(!free.length)return;
+  const id=free[Math.floor(Math.random()*free.length)];
+  setDoc(doc(FS,'uniques',id),{
+    owner:ME,ownerName:(st.pseudo||'Joueur').slice(0,14),destroyed:false,t:Date.now()
+  },{merge:false}).then(()=>{
+    st.drops[id]=1;logLoot(id,'unique');save();render();
+    toast('👑 UNIQUE ! Tu as trouvé '+DROP[id].nom+' — il n\'en existe qu\'une !',true);
+    pushAct(st.pseudo||'Quelqu\'un','a trouvé '+DROP[id].nom+' !');
+  }).catch(()=>{});
+};
+window.destroyUnique=function(id){
+  if(!FS)return;
+  setDoc(doc(FS,'uniques',id),{destroyed:true,owner:null,ownerName:null,t:Date.now()},{merge:true}).catch(()=>{});
+};
+window.claimUniqueOwner=function(id,owner,name){
+  if(!FS)return;
+  setDoc(doc(FS,'uniques',id),{owner,ownerName:name,destroyed:false,t:Date.now()},{merge:true}).catch(()=>{});
+};
+function renderUniquesBand(){
+  let h='<h3>👑 Quequettes (uniques)</h3>';
+  UNIQUE_IDS.forEach(id=>{
+    const u=uniqueReg[id];
+    let status='Non trouvée';
+    if(u&&u.destroyed)status='Détruite (vendue au PNJ) 💀';
+    else if(u&&u.owner)status='Chez '+(u.ownerName||'?')+(u.owner===ME?' (toi)':'');
+    h+='<div class="card row"><div class="info"><b class="rarity-mythic">'+esc(DROP[id].nom)+'</b><small>'+esc(status)+'</small></div></div>';
+  });
+  return h;
+}
+let marketList=[];
+window.renderPeerMarket=function(){
+  const box=document.getElementById('marketPeer');
+  if(!box)return;
+  if(!marketList.length){box.innerHTML='<div class="empty">Aucune annonce. Paulo trouve ça triste.</div>';return;}
+  box.innerHTML=marketList.map(m=>{
+    const mine=m.seller===ME;
+    const qty=Math.max(1,Math.floor(Number(m.qty)||1));
+    const price=Math.max(1,Math.floor(Number(m.price)||1));
+    return '<div class="card row"><div class="info"><b>'+esc(itemName(m.item))+'</b><small>×'+qty+' · '+fmt(price)+' € · '+esc(m.sellerName||'?')+(mine?' (toi)':'')+'</small></div>'+
+      (mine?'<button class="btn" data-mcancel="'+m.id+'">Retirer</button>':'<button class="btn primary" data-mbuypeer="'+m.id+'">Acheter</button>')+'</div>';
+  }).join('');
+};
+/* ===== MARCHÉ ENTRE POTES — mise en vente sécurisée ===== */
+let marketListingBusy=false;
+
+document.getElementById('mList').onclick=async function(){
+  if(marketListingBusy)return;
+  if(!FS||!ME){
+    toast('Connecte-toi à la bande');
+    return;
+  }
+
+  const btn=document.getElementById('mList');
+  const item=document.getElementById('mItem').value;
+  let qty=Math.floor(Number(document.getElementById('mQty').value));
+  let price=Math.floor(Number(document.getElementById('mPrice').value));
+
+  if(!item){
+    toast('Choisis un objet');
+    return;
+  }
+
+  if(!Number.isFinite(qty)||qty<1)qty=1;
+  if(!Number.isFinite(price)||price<1){
+    toast('Prix invalide');
+    return;
+  }
+
+  /* Les objets uniques restent vendables entre potes, mais uniquement par 1. */
+  if(DROP[item]&&DROP[item].unique)qty=1;
+
+  const available=ownedQty(item);
+  if(available<qty){
+    toast('Pas assez d\'objets');
+    return;
+  }
+
+  const sellerName=(st.pseudo||'Joueur').slice(0,14);
+  const isUnique=!!(DROP[item]&&DROP[item].unique);
+
+  marketListingBusy=true;
+  if(btn){
+    btn.disabled=true;
+    btn.textContent='...';
+  }
+
+  /*
+   * On retire l'objet AVANT l'écriture Firebase.
+   * En cas d'échec, il est immédiatement rendu.
+   * L'ancienne version masquait l'erreur Firebase, ce qui rendait
+   * impossible de savoir pourquoi l'annonce ne partait pas.
+   */
+  removeItem(item,qty);
+  if(isUnique&&st.equipped.bonus===item)delete st.equipped.bonus;
+  save();
+  render();
+
+  try{
+    const ref=await addDoc(collection(FS,'market'),{
+      seller:ME,
+      sellerName:sellerName,
+      item:item,
+      qty:qty,
+      price:price,
+      t:Date.now(),
+      unique:isUnique
+    });
+
+    toast('Annonce postée !');
+    pushAct(sellerName,'a mis '+itemName(item)+' en vente');
+
+    /* Rafraîchit immédiatement le marché local si le listener tarde. */
+    if(ref&&ref.id)window._lastMarketListing=ref.id;
+  }catch(err){
+    /* Retour exact de l'objet si Firebase refuse l'annonce. */
+    addItem(item,qty);
+    save();
+    render();
+
+    const code=err&&err.code?String(err.code):'inconnue';
+    console.error('Erreur mise en vente marché:',err);
+
+    if(code.indexOf('permission-denied')!==-1){
+      toast('Marché refusé par Firebase (permissions)');
+    }else if(code.indexOf('unauthenticated')!==-1){
+      toast('Connexion Firebase requise');
+    }else if(code.indexOf('failed-precondition')!==-1){
+      toast('Marché indisponible : vérifie Firestore');
+    }else{
+      toast('Échec annonce · '+code);
+    }
+  }finally{
+    marketListingBusy=false;
+    if(btn){
+      btn.disabled=false;
+      btn.textContent='Vendre';
+    }
+  }
+};
+document.addEventListener('click',function(e){
+  const D=e.target.dataset||{};
+  if(D.mcancel&&FS){
+    const m=marketList.find(x=>x.id===D.mcancel);
+    if(!m||m.seller!==ME)return;
+    deleteDoc(doc(FS,'market',D.mcancel)).then(()=>{
+      addItem(m.item,m.qty);save();render();toast('Annonce retirée, objets rendus');
+    }).catch(()=>toast('Retrait impossible'));
+  }
+  if(D.mbuypeer&&FS&&ME){
+    const m=marketList.find(x=>x.id===D.mbuypeer);
+    if(!m||m.seller===ME)return;
+    if(inv('or')<m.price){toast('Pas assez de €');return;}
+    st.inv.or-=m.price;
+    addItem(m.item,m.qty);
+    save();render();
+    deleteDoc(doc(FS,'market',D.mbuypeer)).then(()=>{
+      addDoc(collection(FS,'goldMail'),{to:m.seller,from:ME,fromName:(st.pseudo||'Joueur').slice(0,14),amount:m.price,t:Date.now()}).catch(()=>{});
+      if(m.unique||(DROP[m.item]&&DROP[m.item].unique)){
+        window.claimUniqueOwner(m.item,ME,(st.pseudo||'Joueur').slice(0,14));
+        toast('👑 Tu possèdes maintenant '+itemName(m.item)+' !');
+        pushAct(st.pseudo||'Quelqu\'un','a acheté '+itemName(m.item));
+      }else{
+        toast('Acheté à '+m.sellerName+' !');
+        pushAct(st.pseudo||'Quelqu\'un','a acheté sur le marché');
+      }
+    }).catch(()=>{st.inv.or+=m.price;removeItem(m.item,m.qty);save();render();toast('Déjà vendu');});
+  }
+});
+function renderBand(){renderOnline();var ids=Object.keys(PL),t=totals(),ok=true,s='';for(var k in SO.needs){var n=SO.needs[k],v=Math.min(t[k]||0,n);if(v<n)ok=false;s+='<div class="card row"><div class="info"><b>'+esc(IT[k][0])+'</b><small>'+fmt(t[k]||0)+' / '+n+'</small><div class="lvl-bar" style="margin:6px 0 0"><i style="width:'+(v/n*100)+'%"></i></div></div><button class="btn" data-give="'+k+'">+10</button></div>';}s+=st.sdone[SO.id]?'<div class="card row"><div class="info"><b>Soirée réussie</b><small>Récompense prise</small></div></div>':'<div class="card row"><div class="info"><b>Récompense</b><small>'+SO.reward+' € + apéro 30 min</small></div><button class="btn primary" data-claim="1"'+(ok?'':' disabled')+'>Prendre</button></div>';var me=i=>i===ME?' (toi)':'';var dj=ids.filter(i=>PL[i].dayKey===today()).sort((a,b)=>(PL[b].dayN||0)-(PL[a].dayN||0));var dh=dj.length?dj.map((i,n)=>rw((n+1)+'. '+PL[i].pseudo+me(i),fmt(PL[i].dayN||0)+' act.')).join(''):'<div class="empty">Personne aujourd’hui</div>';var ch=ids.slice().sort((a,b)=>(PL[b].score||0)-(PL[a].score||0)).map((i,n)=>{var p=PL[i];return rw((n+1)+'. '+p.pseudo+me(i),'niv. '+(p.lv||0)+(p.stars?' · '+p.stars+'★':''));}).join('');var key=s+dh+ch;if(key!==lastB){lastB=key;document.getElementById('soiree').innerHTML=s;document.getElementById('defi').innerHTML=dh;document.getElementById('clas').innerHTML=ch;}
+  var uq=document.getElementById('uniquesBand');
+  if(!uq){var wrap=document.createElement('div');wrap.id='uniquesBand';document.getElementById('p-band').appendChild(wrap);uq=wrap;}
+  uq.innerHTML=renderUniquesBand();
+  fillSel('gto',ids.filter(i=>i!==ME).map(i=>[i,String(PL[i].pseudo||'Joueur')]));gsel();}
+function gclaim(x){var g=x.data();if(!g||seen[x.id])return;seen[x.id]=1;var bad=!IT[g.item]||g.item==='or'||!(g.qty>=1)||g.qty>1000;deleteDoc(doc(FS,'gifts',x.id)).then(()=>{if(bad)return;st.inv[g.item]=inv(g.item)+g.qty;save();render();toast((g.fromName||'Un pote')+' t’envoie '+g.qty+' '+(IT[g.item]?IT[g.item][0]:g.item).toLowerCase()+' !');}).catch(()=>{seen[x.id]=0;});}
+document.addEventListener('click',function(e){var D=e.target.dataset||{};if(D.give){if(!FS||!ME){toast('Pas connecté');return;}var k=D.give,q=Math.min(10,Math.floor(inv(k)));if(q<1){toast('Pas assez');return;}st.inv[k]-=q;st.give[k]=(st.give[k]||0)+q;if(PL[ME])PL[ME].give=st.give;save();sync();renderBand();render();pushAct(st.pseudo||'Quelqu\'un','a donné '+q+' '+IT[k][0].toLowerCase());}if(D.claim&&FS&&!st.sdone[SO.id]){var t=totals(),ok=true;for(var k2 in SO.needs)if((t[k2]||0)<SO.needs[k2])ok=false;if(ok){st.sdone[SO.id]=1;st.inv.or=inv('or')+SO.reward;st.buff=Date.now()+1800000;st.buffM=1.3;toast('Soirée réussie ! +'+SO.reward+' €');save();renderBand();render();pushAct(st.pseudo||'Quelqu\'un','a récupéré la récompense de la soirée');}}if(e.target.id==='gsend'){var to=document.getElementById('gto').value,it=document.getElementById('git').value,n=Math.floor(+document.getElementById('gq').value);if(!FS||!ME||!to||!IT[it]||it==='or'||!(n>=1)||n>inv(it)){toast('Vérifie ta sélection');return;}st.inv[it]-=n;save();render();addDoc(collection(FS,'gifts'),{from:ME,fromName:(st.pseudo||'Un pote').slice(0,14),to,item:it,qty:n,t:Date.now()}).then(()=>{toast('Cadeau envoyé');pushAct(st.pseudo||'Quelqu\'un','a envoyé un cadeau');}).catch(()=>{st.inv[it]=inv(it)+n;save();render();toast('Échec, objets rendus');});}});
+var pi=document.getElementById('pseudo');
+pi.value=st.pseudo||'';
+function setPseudo(name,paid){
+  name=(name||'').trim().slice(0,14);
+  if(!name){toast('Pseudo vide, boloss');return false;}
+  if(paid){
+    if(inv('or')<500){toast('Il te faut 500 € pour changer de pseudo');return false;}
+    if(name===st.pseudo){toast('C\'est déjà ton pseudo');return false;}
+    st.inv.or=inv('or')-500;
+  }
+  st.pseudo=name;st.pseudoSet=1;save();
+  pi.value=name;
+  if(typeof sync==='function')sync();
+  renderPerso();render();
+  return true;
+}
+(function initPseudo(){
+  var modal=document.getElementById('pseudoModal');
+  if(st.pseudo&&st.pseudoSet){modal.classList.remove('show');modal.style.display='none';}
+  else if(st.pseudo&&!st.pseudoSet){st.pseudoSet=1;save();modal.classList.remove('show');modal.style.display='none';}
+  else{modal.classList.add('show');modal.style.display='flex';}
+  document.getElementById('pseudoOk').onclick=function(){
+    var n=document.getElementById('pseudoFirst').value;
+    if(setPseudo(n,false)){modal.classList.remove('show');modal.style.display='none';toast('Bienvenue, '+st.pseudo+' !');}
+  };
+  document.getElementById('pseudoFirst').addEventListener('keydown',function(e){
+    if(e.key==='Enter')document.getElementById('pseudoOk').click();
+  });
+  document.getElementById('btnRename').onclick=function(){
+    var n=prompt('Nouveau pseudo (500 €) :',st.pseudo||'');
+    if(n===null)return;
+    if(setPseudo(n,true))toast('Pseudo changé : '+st.pseudo+' (−500 €)');
+  };
+})();
+document.addEventListener('visibilitychange',function(){if(document.hidden)sync();else{sync();tick();}});
+setInterval(()=>{if(!document.getElementById('p-band').hidden)gsel();},2000);setInterval(sync,25000);
+(function(){var link=location.origin+location.pathname+(location.pathname.endsWith('/')?'':'/');if(location.hostname==='github.com'||location.hostname.includes('githubusercontent'))link='https://luffandguo33-ai.github.io/La-Team/';document.getElementById('shareLink').textContent=link;document.getElementById('copyLink').onclick=function(){navigator.clipboard.writeText(link).then(()=>toast('Lien copié !')).catch(()=>toast(link));};})();
+/* ===== BOSS BANDE ===== */
+let bossBusy=false,bossClaimed={};
+window.tryBossSpawn=function(){
+  if(!FS||!ME)return;
+  if(bossLive&&bossLive.active)return;
+  if(Math.random()>0.0015)return;
+  const def=BOSS_DEFS[Math.floor(Math.random()*BOSS_DEFS.length)];
+  const data={
+    active:true,id:def.id,nom:def.nom,hp:def.pv,maxHp:def.pv,atk:def.atk,def:def.def,msg:def.msg,
+    damage:{},names:{},foundBy:ME,foundByName:(st.pseudo||'Un pote').slice(0,14),
+    lastHit:null,lastHitName:null,t:Date.now(),dead:false,rewardsGiven:false
+  };
+  setDoc(doc(FS,'boss','current'),data).then(()=>{
+    toast('🍺 BOSS ! '+def.nom+' est apparu ! Toute la bande peut le taper.');
+    pushAct(st.pseudo||'Quelqu\'un','a trouvé '+def.nom+' !');
+  }).catch(()=>{});
+};
+window.sendApero=function(amount){
+  if(!FS||!ME)return;
+  addDoc(collection(FS,'apero'),{
+    from:ME,fromName:(st.pseudo||'Un pote').slice(0,14),heal:amount||40,t:Date.now()
+  }).then(()=>pushAct(st.pseudo||'Quelqu\'un','a lancé un apéro 🍻')).catch(()=>{});
+};
+window.sendMalus=function(malusId){
+  if(!FS||!ME){toast('Pas connecté');return;}
+  if(!bossLive||!bossLive.active||bossLive.hp<=0){toast('Pas de boss en cours');return;}
+  if(!DROP[malusId]||DROP[malusId].cat!=='malus'||dropQty(malusId)<1){toast('T\'as pas ça');return;}
+  const others=Object.keys(PL).filter(i=>i!==ME);
+  if(!others.length){toast('Personne à saboter… triste.');return;}
+  let to=others[0];
+  if(others.length>1){
+    const labels=others.map((id,i)=>(i+1)+'. '+(PL[id].pseudo||'Joueur')).join('\n');
+    const pick=prompt('Envoyer « '+DROP[malusId].nom+' » à qui ?\n'+labels+'\n(numéro)');
+    const n=parseInt(pick,10);
+    if(!n||n<1||n>others.length){toast('Annulé');return;}
+    to=others[n-1];
+  }
+  st.drops[malusId]=dropQty(malusId)-1;
+  save();render();
+  const m=DROP[malusId];
+  addDoc(collection(FS,'malus'),{
+    from:ME,fromName:(st.pseudo||'Un pote').slice(0,14),to:to,
+    item:malusId,effect:m.effect,dur:m.dur,msg:m.msg,t:Date.now()
+  }).then(()=>{
+    toast('😈 Malus envoyé à '+(PL[to]&&PL[to].pseudo||'un pote'));
+    pushAct(st.pseudo||'Quelqu\'un','a balance un malus');
+  }).catch(()=>{st.drops[malusId]=dropQty(malusId)+1;save();render();toast('Envoi raté');});
+};
+function pickPote(label){
+  /* On peut envoyer à un joueur même s'il est hors ligne : son message reste dans Firebase. */
+  const others=Object.keys(PL).filter(i=>i!==ME);
+  if(!others.length){toast('Personne dans la bande');return null;}
+  if(others.length===1)return others[0];
+  const labels=others.map((id,i)=>{
+    const online=isOnline(PL[id]);
+    return (i+1)+'. '+(PL[id].pseudo||'Joueur')+(online?' 🟢':' ⚪ hors ligne');
+  }).join('\n');
+  const pick=prompt(label+'\n'+labels+'\n(numéro)');
+  const n=parseInt(pick,10);
+  if(!n||n<1||n>others.length){toast('Annulé');return null;}
+  return others[n-1];
+}
+window.sendSocial=function(itemId){
+  if(!FS||!ME){toast('Pas connecté');return;}
+  if(!DROP[itemId]||DROP[itemId].cat!=='social'||dropQty(itemId)<1){toast('T\'as pas ça');return;}
+  const labels={duel_msg:'Faut qu\'on parle avec qui ?',beer_msg:'On boit une bière avec qui ?',item_pipe:'Envoyer la pipe à qui ? (+15% XP pour vous deux · 10 min)',paye_coup:'Faire payer 100 € à qui ?',deathnote:'Envoyer la Deathnote à qui ? (⚠️ vide tous ses PV)'};
+  const to=pickPote(labels[itemId]||'Envoyer à qui ?');
+  if(!to)return;
+  st.drops[itemId]=dropQty(itemId)-1;save();render();
+  if(itemId==='deathnote'||itemId==='paye_coup'){
+    const data={from:ME,fromName:(st.pseudo||'Un pote').slice(0,14),to:to,item:itemId,t:Date.now()};
+    addDoc(collection(FS,'itemMail'),data).then(()=>{
+      const target=PL[to]&&PL[to].pseudo||'un pote';
+      toast((itemId==='deathnote'?'☠️ Deathnote envoyée à ':'💸 « Paye ton coup » envoyé à ')+target+' !');
+      pushAct(st.pseudo||'Quelqu\'un','a envoyé '+DROP[itemId].nom+' à '+target);
+    }).catch(()=>{st.drops[itemId]=dropQty(itemId)+1;save();render();toast('Envoi raté');});
+    return;
+  }
+  if(itemId==='item_pipe'){
+    st.xpBuffPct=15;st.xpBuffUntil=Date.now()+10*60*1000;save();
+    addDoc(collection(FS,'pipe'),{
+      from:ME,fromName:(st.pseudo||'Un pote').slice(0,14),to:to,t:Date.now()
+    }).then(()=>{
+      toast('💦 Pipe envoyée ! +15% XP pour toi aussi · 10 min');
+      pushAct(st.pseudo||'Quelqu\'un','a envoyé une pipe');
+      render();
+    }).catch(()=>{st.drops[itemId]=dropQty(itemId)+1;st.xpBuffUntil=0;save();render();toast('Envoi raté');});
+    return;
+  }
+  if(itemId==='duel_msg'){
+    /* Duel forcé — stats équitables (équipement only) */
+    const myTeam=st.teamWith?[{id:ME,name:(st.pseudo||'Toi').slice(0,14),atk:fairAtk(),def:fairDef()},{id:st.teamWith,name:(st.teamName||'Pote').slice(0,14),atk:15,def:8}]:[{id:ME,name:(st.pseudo||'Toi').slice(0,14),atk:fairAtk(),def:fairDef()}];
+    const theirTeam=[{id:to,name:(PL[to]&&PL[to].pseudo||'Pote').slice(0,14),atk:15,def:8}];
+    /* si la cible a un teammate on le saura côté serveur via son état — pour simplicité 1v1 ou 2v1 si on a un pote */
+    const data={
+      status:'active',
+      a:myTeam,b:theirTeam,
+      hpA:100*myTeam.length,hpB:100*theirTeam.length,
+      maxA:100*myTeam.length,maxB:100*theirTeam.length,
+      turn:'a',
+      log:'💬 « Faut qu\'on parle. » — le duel commence. Stats équitables (équipement only).',
+      from:ME,to:to,t:Date.now()
+    };
+    addDoc(collection(FS,'duels'),data).then(ref=>{
+      toast('⚔️ Duel lancé ! Il ne peut pas refuser.');
+      pushAct(st.pseudo||'Quelqu\'un','a dit « Faut qu\'on parle » à '+(PL[to]&&PL[to].pseudo||'un pote'));
+      window.openDuelUI(ref.id,data);
+    }).catch(()=>{st.drops[itemId]=dropQty(itemId)+1;save();render();toast('Duel raté');});
+  }else{
+    addDoc(collection(FS,'teamInvites'),{
+      from:ME,fromName:(st.pseudo||'Un pote').slice(0,14),to:to,t:Date.now()
+    }).then(()=>{
+      toast('🍺 Invitation bière envoyée (il peut refuser)');
+      pushAct(st.pseudo||'Quelqu\'un','propose une bière');
+    }).catch(()=>{st.drops[itemId]=dropQty(itemId)+1;save();render();toast('Envoi raté');});
+  }
+};
+let duelBusy=false,currentDuelId=null;
+window.openDuelUI=function(id,d){
+  currentDuelId=id;
+  const iAmA=d.a&&d.a.some(p=>p.id===ME);
+  const iAmB=d.b&&d.b.some(p=>p.id===ME);
+  if(!iAmA&&!iAmB)return;
+  document.getElementById('mgTitle').textContent='⚔️ Faut qu\'on parle';
+  document.getElementById('mgSub').textContent='Duel équitable — le niveau compte pas, que le stuff';
+  document.getElementById('mgCancel').textContent='…';
+  document.getElementById('mgCancel').onclick=function(){toast('On fuit pas un « faut qu\'on parle »');};
+  document.getElementById('mgAction').textContent='Frapper';
+  document.getElementById('mgAction').onclick=function(){window.duelHit(id);};
+  window.renderDuelUI(d);
+  document.getElementById('mg').classList.add('show');
+};
+window.renderDuelUI=function(d){
+  if(!d)return;
+  const pctA=Math.max(0,d.hpA/d.maxA*100),pctB=Math.max(0,d.hpB/d.maxB*100);
+  const namesA=(d.a||[]).map(p=>p.name).join(' + ');
+  const namesB=(d.b||[]).map(p=>p.name).join(' + ');
+  document.getElementById('mgArea').innerHTML=
+    '<div class="mg-score">'+esc(namesA)+'</div><div class="lvl-bar"><i style="width:'+pctA+'%"></i></div><small style="color:var(--mute)">PV '+Math.floor(d.hpA)+'/'+d.maxA+'</small>'+
+    '<div class="mg-score" style="margin-top:10px">'+esc(namesB)+'</div><div class="lvl-bar"><i style="width:'+pctB+'%;background:#c45c5c"></i></div><small style="color:var(--mute)">PV '+Math.floor(d.hpB)+'/'+d.maxB+'</small>'+
+    '<div class="mg-score" style="font-size:.85rem;font-weight:400;margin-top:10px">'+esc(d.log||'')+'</div>';
+};
+window.duelHit=async function(id){
+  if(!FS||!ME||duelBusy)return;
+  duelBusy=true;
+  try{
+    /* lecture via état local — on recalcule côté client et merge */
+    const snap=await new Promise((res,rej)=>{
+      /* use last known from listener via window._duelCache */
+      res(window._duelCache&&window._duelCache[id]);
+    });
+    let d=snap||window._duelCache[id];
+    if(!d||d.status!=='active'){duelBusy=false;return;}
+    const iAmA=d.a.some(p=>p.id===ME);
+    const iAmB=d.b.some(p=>p.id===ME);
+    if(!iAmA&&!iAmB){duelBusy=false;return;}
+    /* tour libre : tout le monde peut frapper (plus fun en bande) */
+    const atk=fairAtk();
+    const defSide=iAmA?(d.b[0]&&d.b[0].def||8):(d.a[0]&&d.a[0].def||8);
+    const dmg=Math.max(1,Math.floor(atk-defSide*0.35+Math.random()*6));
+    let hpA=d.hpA,hpB=d.hpB,log='',status='active',winner=null;
+    if(iAmA){hpB=Math.max(0,hpB-dmg);log=(st.pseudo||'Toi')+' met '+dmg+' !';}
+    else{hpA=Math.max(0,hpA-dmg);log=(st.pseudo||'Toi')+' met '+dmg+' !';}
+    if(hpA<=0){status='done';winner='b';log+=' 🏆 '+(d.b.map(p=>p.name).join('+'))+' gagne !';}
+    if(hpB<=0){status='done';winner='a';log+=' 🏆 '+(d.a.map(p=>p.name).join('+'))+' gagne !';}
+    await setDoc(doc(FS,'duels',id),{hpA,hpB,log,status,winner,lastHit:ME},{merge:true});
+    if(status==='done')window.finishDuel(id,{...d,hpA,hpB,status,winner});
+  }catch(e){toast('Coup raté');}
+  duelBusy=false;
+};
+window.finishDuel=function(id,d){
+  const key='duelRew_'+id;
+  if(localStorage.getItem(key))return;
+  localStorage.setItem(key,'1');
+  const iAmA=d.a&&d.a.some(p=>p.id===ME);
+  const iAmB=d.b&&d.b.some(p=>p.id===ME);
+  const won=(d.winner==='a'&&iAmA)||(d.winner==='b'&&iAmB);
+  if(won){
+    const pool=['ticket_10','ticket_10','ticket_20','ticket_20','ticket_30','ticket_40','ticket_50','ticket_60','ticket_70'];
+    const tid=pool[Math.floor(Math.random()*pool.length)];
+    st.drops[tid]=dropQty(tid)+1;logLoot(tid,'duel');
+    toast('🏆 Victoire ! Tu gagnes '+DROP[tid].nom+' (active-le 5 min sur le marché)');
+    pushAct(st.pseudo||'Quelqu\'un','a gagné un duel');
+  }else if(iAmA||iAmB){
+    toast('💀 T\'as perdu le « faut qu\'on parle ». Bière offerte ?');
+  }
+  save();render();
+  setTimeout(()=>{
+    document.getElementById('mg').classList.remove('show');
+    document.getElementById('mgCancel').textContent='Fermer';
+    document.getElementById('mgCancel').onclick=mgClose;
+    currentDuelId=null;
+    deleteDoc(doc(FS,'duels',id)).catch(()=>{});
+  },3500);
+};
+function showBossNav(on){
+  const btn=document.getElementById('navBoss');
+  if(btn)btn.hidden=!on;
+  if(!on&&!document.getElementById('p-boss').hidden){
+    document.getElementById('p-boss').hidden=true;
+    document.getElementById('p-act').hidden=false;
+    document.querySelectorAll('nav button').forEach(b=>b.className=b.dataset.tab==='act'?'on':'');
+  }
+}
+window.renderBossTab=function(){
+  const box=document.getElementById('bossCard');
+  if(!bossLive||!bossLive.active){
+    box.innerHTML='<div class="empty">Aucun boss actif.</div>';
+    return;
+  }
+  const b=bossLive;
+  const pct=Math.max(0,b.hp/b.maxHp*100);
+  const dmg=b.damage||{};
+  const names=b.names||{};
+  const ranking=Object.keys(dmg).sort((a,c)=>(dmg[c]||0)-(dmg[a]||0));
+  let rankH=ranking.length?ranking.map((uid,i)=>{
+    const me=uid===ME?' (toi)':'';
+    return '<div class="card row"><div class="info"><b>'+(i+1)+'. '+esc(names[uid]||'Joueur')+me+'</b><small>'+fmt(dmg[uid]||0)+' dégâts</small></div></div>';
+  }).join(''):'<div class="empty">Personne n\'a encore frappé</div>';
+  box.innerHTML=
+    '<div class="card"><div class="info"><b style="font-size:1.1rem">🍺 '+esc(b.nom)+'</b><small>'+esc(b.msg||'')+'</small></div>'+
+    '<div class="lvl-bar" style="margin:10px 0 4px"><i style="width:'+pct+'%;background:#c45c5c"></i></div>'+
+    '<small style="color:var(--mute)">PV '+fmt(Math.max(0,Math.floor(b.hp)))+' / '+fmt(b.maxHp)+' · ATK '+b.atk+' · DEF '+b.def+'</small>'+
+    '<small style="color:var(--mute);display:block;margin-top:4px">Trouvé par '+esc(b.foundByName||'?')+'</small>'+
+    '<button class="btn primary" id="bossHit" style="width:100%;margin-top:12px"'+(b.dead||b.hp<=0?' disabled':'')+'>Frapper</button></div>'+
+    '<h3>Classement dégâts</h3>'+rankH+
+    (b.dead?'<div class="card" style="margin-top:10px"><b>Boss vaincu !</b><small>Last hit : '+esc(b.lastHitName||'?')+'</small></div>':'')+
+    (st.debuff&&st.debuff.left>0?'<div class="card" style="margin-top:8px"><b>😈 Malus actif</b><small>'+esc(st.debuff.fromName||'')+' — '+esc(st.debuff.msg||st.debuff.effect)+' ('+st.debuff.left+' tours)</small></div>':'');
+  const hitBtn=document.getElementById('bossHit');
+  if(hitBtn)hitBtn.onclick=window.bossAttack;
+};
+window.bossAttack=async function(){
+  if(!FS||!ME||!bossLive||!bossLive.active||bossLive.hp<=0||bossBusy)return;
+  if(st.hp<=0){toast('T\'es KO. Attends de régénérer.');return;}
+  /* Malus stun */
+  if(st.debuff&&st.debuff.effect==='stun'&&st.debuff.left>0){
+    st.debuff.left--;
+    const who=st.debuff.fromName||'Un pote';
+    toast('😴 '+who+' '+ (st.debuff.msg||'t\'a mis KO pour ce tour')+' ('+st.debuff.left+' restant)');
+    if(st.debuff.left<=0)st.debuff=null;
+    save();render();
+    if(typeof window.renderBossTab==='function')window.renderBossTab();
+    return;
+  }
+  bossBusy=true;
+  try{
+    const b={...bossLive};
+    let atk=playerAtk();
+    let def=playerDef();
+    if(st.debuff&&st.debuff.left>0){
+      if(st.debuff.effect==='atk')atk=Math.max(1,Math.floor(atk*0.55));
+      if(st.debuff.effect==='def')def=Math.max(0,Math.floor(def*0.5));
+      if(st.debuff.effect==='dmg')atk=Math.max(1,Math.floor(atk*0.65));
+      st.debuff.left--;
+      if(st.debuff.left<=0)st.debuff=null;
+    }
+    const dmg=Math.max(1,Math.floor(atk-b.def*0.4+Math.random()*8));
+    const edmg=Math.max(1,Math.floor(b.atk-def*0.5+Math.random()*5));
+    st.hp=Math.max(0,st.hp-edmg);
+    const damage={...(b.damage||{})};
+    damage[ME]=(damage[ME]||0)+dmg;
+    const names={...(b.names||{})};
+    names[ME]=(st.pseudo||'Joueur').slice(0,14);
+    let hp=b.hp-dmg;
+    let dead=false,lastHit=b.lastHit,lastHitName=b.lastHitName;
+    if(hp<=0){hp=0;dead=true;lastHit=ME;lastHitName=names[ME];}
+    await setDoc(doc(FS,'boss','current'),{
+      hp,damage,names,dead,lastHit,lastHitName,active:true
+    },{merge:true});
+    toast('Tu mets '+dmg+' à '+b.nom+' · Il te rend '+edmg);
+    if(st.hp<=0){st.hp=Math.max(1,Math.floor(st.hpMax*0.2));toast('Tu t\'es pris une gamelle. Recule un peu.');}
+    save();render();
+  }catch(e){toast('Attaque ratée (réseau)');}
+  bossBusy=false;
+};
+window.resolveBossKill=async function(){
+  if(!FS||!bossLive)return;
+  const b=bossLive;
+  const key='bossRew_'+b.id+'_'+b.t;
+  if(localStorage.getItem(key))return;
+  localStorage.setItem(key,'1');
+  const dmg=b.damage||{};
+  const ranking=Object.keys(dmg).sort((a,c)=>(dmg[c]||0)-(dmg[a]||0));
+  const topDps=ranking[0];
+  const last=b.lastHit;
+  if(ME===last){
+    const gold=400+Math.floor(Math.random()*200);
+    st.inv.or=inv('or')+gold;
+    st.xp[cur]=(st.xp[cur]||0)+120;
+    const eq=rollEqDrop()||'blouson';
+    if(DROP[eq]){st.drops[eq]=dropQty(eq)+1;logLoot(eq,'combat');}
+    if(Math.random()<0.45){const c='coffre_or';st.drops[c]=dropQty(c)+1;logLoot(c,'combat');}
+    toast('💀 LAST HIT ! Tu finis '+b.nom+' · Gros loot +'+gold+' €');
+    pushAct(b.lastHitName||'Quelqu\'un','a mis le last hit sur '+b.nom+' !');
+  }else if(ME===topDps){
+    const gold=250+Math.floor(Math.random()*100);
+    st.inv.or=inv('or')+gold;
+    st.xp[cur]=(st.xp[cur]||0)+80;
+    if(Math.random()<0.25){const eq=rollEqDrop();if(eq){st.drops[eq]=dropQty(eq)+1;logLoot(eq,'combat');}}
+    toast('🏆 Top dégâts sur '+b.nom+' ! +'+gold+' €');
+  }else if(dmg[ME]){
+    const gold=80+Math.floor(Math.random()*40);
+    st.inv.or=inv('or')+gold;
+    st.xp[cur]=(st.xp[cur]||0)+30;
+    toast('Tu as aidé à down '+b.nom+' · +'+gold+' €');
+  }
+  save();render();
+  clearBossMalus();
+  setTimeout(()=>{
+    setDoc(doc(FS,'boss','current'),{active:false,dead:true,hp:0},{merge:true}).catch(()=>{});
+  },10000);
+};
+(async function(){
+  try{
+    const app=initializeApp(cfg),auth=getAuth(app);
+    FS=getFirestore(app);
+    const cr=await signInAnonymously(auth);
+    ME=cr.user.uid;
+  }catch(e){FS=null;ME=null;bmsg('Hors ligne — solo OK');return;}
+  bmsg('Connecté');
+  onSnapshot(collection(FS,'players'),s=>{PL={};s.docs.forEach(x=>PL[x.id]=x.data());renderBand();},()=>bmsg('Lecture bande impossible'));
+  onSnapshot(query(collection(FS,'gifts'),where('to','==',ME)),s=>s.docs.forEach(gclaim),()=>{});
+  onSnapshot(query(collection(FS,'activity'),orderBy('t','desc'),limit(15)),s=>{feedItems=s.docs.map(d=>d.data());renderFeed();},()=>{});
+  onSnapshot(collection(FS,'market'),s=>{
+    marketList=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(b.t||0)-(a.t||0));
+    window.renderPeerMarket();
+  },()=>{});
+  onSnapshot(collection(FS,'uniques'),s=>{
+    uniqueReg={};
+    s.docs.forEach(d=>{uniqueReg[d.id]=d.data();});
+    if(typeof renderBand==='function')renderBand();
+  },()=>{});
+  onSnapshot(query(collection(FS,'goldMail'),where('to','==',ME)),s=>{
+    s.docs.forEach(x=>{
+      const g=x.data();
+      deleteDoc(doc(FS,'goldMail',x.id)).then(()=>{
+        st.inv.or=inv('or')+(g.amount||0);
+        save();render();
+        toast('💰 '+(g.fromName||'Un pote')+' t\'a payé '+fmt(g.amount||0)+' € (marché)');
+      }).catch(()=>{});
+    });
+  },()=>{});
+  /* Objets envoyés : conservés dans Firebase tant que le destinataire n\'est pas connecté.
+     À la connexion, l\'effet est appliqué puis une popup plein écran apparaît. */
+  onSnapshot(query(collection(FS,'itemMail'),where('to','==',ME)),s=>{
+    s.docs.forEach(x=>{
+      if(window._receivedItemIds&&window._receivedItemIds[x.id])return;
+      if(!window._receivedItemIds)window._receivedItemIds={};
+      window._receivedItemIds[x.id]=1;
+      const g=x.data();
+      const item=g.item;
+      const sender=g.fromName||'Un pote';
+      if(item==='deathnote'){
+        st.hp=0;
+        save();render();
+        window.showIncomingItem('☠️ DEATHNOTE',sender+' t\'a envoyé une Deathnote.', '💀 Tes PV ont été vidés !', 'deathnote');
+      }else if(item==='paye_coup'){
+        const before=inv('or');
+        st.inv.or=Math.max(0,before-100);
+        save();render();
+        window.showIncomingItem('💸 PAYE TON COUP',sender+' te fait payer ton coup.', '−'+fmt(Math.min(100,before))+' €', 'paye_coup');
+      }else{
+        window.showIncomingItem('📨 Objet reçu',sender+' t\'a envoyé '+((DROP[item]&&DROP[item].nom)||item)+'.', '', item);
+      }
+      deleteDoc(doc(FS,'itemMail',x.id)).catch(()=>{});
+    });
+  },()=>{});
+  onSnapshot(collection(FS,'apero'),s=>{
+    if(!window._seenApero)window._seenApero={};
+    s.docs.forEach(x=>{
+      if(window._seenApero[x.id])return;
+      window._seenApero[x.id]=1;
+      const g=x.data();
+      if(g.from===ME)return; /* déjà soigné côté lanceur */
+      if(Date.now()-(g.t||0)>120000)return; /* ignore vieux */
+      const got=applyHeal(g.heal||40);
+      save();render();
+      toast('🍻 '+(g.fromName||'Un pote')+' a sorti l\'apéro ! +'+got+' PV');
+    });
+  },()=>{});
+  onSnapshot(query(collection(FS,'pipe'),where('to','==',ME)),s=>{
+    s.docs.forEach(x=>{
+      const g=x.data();
+      deleteDoc(doc(FS,'pipe',x.id)).then(()=>{
+        st.xpBuffPct=15;st.xpBuffUntil=Date.now()+10*60*1000;save();render();
+        toast('💦 '+(g.fromName||'Un pote')+' t\'a envoyé la pipe ! +15% XP · 10 min');
+      }).catch(()=>{});
+    });
+  },()=>{});
+  onSnapshot(query(collection(FS,'malus'),where('to','==',ME)),s=>{
+    s.docs.forEach(x=>{
+      const g=x.data();
+      deleteDoc(doc(FS,'malus',x.id)).then(()=>{
+        if(!bossLive||!bossLive.active)return;
+        st.debuff={effect:g.effect,left:g.dur||2,fromName:g.fromName||'Un pote',msg:g.msg||''};
+        save();
+        const line=(g.fromName||'Un pote')+' : '+(g.msg?g.msg:'malus')+'.';
+        toast('😈 '+line);
+        if(typeof window.renderBossTab==='function')window.renderBossTab();
+      }).catch(()=>{});
+    });
+  },()=>{});
+  window._duelCache={};
+  onSnapshot(collection(FS,'duels'),s=>{
+    window._duelCache={};
+    s.docs.forEach(x=>{
+      const d=x.data();
+      window._duelCache[x.id]=d;
+      const inA=d.a&&d.a.some(p=>p.id===ME);
+      const inB=d.b&&d.b.some(p=>p.id===ME);
+      if(!inA&&!inB)return;
+      if(d.status==='active'){
+        if(currentDuelId!==x.id)window.openDuelUI(x.id,d);
+        else window.renderDuelUI(d);
+      }
+      if(d.status==='done'&&currentDuelId===x.id){
+        window.finishDuel(x.id,d);
+      }
+    });
+  },()=>{});
+  onSnapshot(query(collection(FS,'teamInvites'),where('to','==',ME)),s=>{
+    s.docs.forEach(x=>{
+      const g=x.data();
+      if(window._seenTeam&&window._seenTeam[x.id])return;
+      if(!window._seenTeam)window._seenTeam={};
+      window._seenTeam[x.id]=1;
+      const ok=confirm((g.fromName||'Un pote')+' : « On boit une bière ? » (équipe pour les duels)\n\nOK = accepter · Annuler = refuser');
+      deleteDoc(doc(FS,'teamInvites',x.id)).then(()=>{
+        if(ok){
+          st.teamWith=g.from;st.teamName=g.fromName||'Pote';
+          save();render();
+          toast('🍺 Équipe formée avec '+(g.fromName||'un pote')+' !');
+          addDoc(collection(FS,'teamInvites'),{from:ME,fromName:(st.pseudo||'Toi').slice(0,14),to:g.from,accept:true,t:Date.now()}).catch(()=>{});
+          pushAct(st.pseudo||'Quelqu\'un','a trinqué avec '+(g.fromName||'un pote'));
+        }else toast('Tu as refusé la bière. Classe.');
+      }).catch(()=>{});
+    });
+  },()=>{});
+  /* accept confirmation back to inviter */
+  onSnapshot(collection(FS,'teamInvites'),s=>{
+    s.docs.forEach(x=>{
+      const g=x.data();
+      if(g.accept&&g.to===ME&&g.from){
+        if(window._seenTeamAccept&&window._seenTeamAccept[x.id])return;
+        if(!window._seenTeamAccept)window._seenTeamAccept={};
+        window._seenTeamAccept[x.id]=1;
+        st.teamWith=g.from;st.teamName=g.fromName||'Pote';
+        save();render();
+        deleteDoc(doc(FS,'teamInvites',x.id)).catch(()=>{});
+        toast('🍺 '+(g.fromName||'Un pote')+' a accepté ! Vous êtes en équipe.');
+      }
+    });
+  },()=>{});
+  onSnapshot(doc(FS,'boss','current'),snap=>{
+    if(!snap.exists()){bossLive=null;showBossNav(false);return;}
+    const d=snap.data();
+    const wasAlive=bossLive&&bossLive.hp>0&&!bossLive.dead;
+    bossLive=d;
+    const show=d.active&&(d.hp>0||d.dead);
+    showBossNav(!!show);
+    if(d.active)window.renderBossTab();
+    if(d.dead&&d.hp<=0&&wasAlive)window.resolveBossKill();
+    if(d.dead)setTimeout(()=>{if(bossLive&&bossLive.dead)showBossNav(false);},12000);
+    if(d.active&&d.hp>0&&!document.getElementById('navBoss').dataset.alerted){
+      document.getElementById('navBoss').dataset.alerted='1';
+      if(d.foundBy!==ME)toast('🍺 '+d.nom+' est là ! Onglet Boss');
+    }
+    if(!d.active){
+      document.getElementById('navBoss').dataset.alerted='';
+      clearBossMalus();
+      render();
+    }
+  },()=>{});
+  sync();
+})();
+</script>
+</body>
+</html>
