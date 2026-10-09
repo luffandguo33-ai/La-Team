@@ -1,0 +1,15 @@
+{
+  "name": "La Team",
+  "short_name": "La Team",
+  "description": "Le jeu idle de la bande",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f6f5",
+  "theme_color": "#5a8f7b",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}
